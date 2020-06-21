@@ -185,7 +185,7 @@ export default {
   name: 'App',
   data: function(){
     return {
-      isLog: false,
+      isLog: true,
       login: '',
       password: '', 
       displayError: false,
