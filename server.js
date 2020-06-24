@@ -648,18 +648,34 @@ app.post('/api/edit-category', urlencodedParser, (req, res)=>{
 //____________SIGN IN_________________
 app.post('/api/sign-in', urlencodedParser, (req,res)=>{
     console.log('AUTH')
-    User.findAll({
-        where:{
-            login: req.body.login
+    var userLogin = '';
+    var userPassword = '';
+    //найти юзера по логину (так как пока нет такого фильтра, то искать по логину.)
+    fetch('http://yaem.online/robo/users/userCredentals.php?id=1', {
+        method: 'GET',
+        headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': '1 111111_2'
         }
-    }).then(user=>{
-        if(user.length !=0){
-            if(user[0].password==req.body.password){
-                res.json({hash: 'ok123'})
+    }).then(res=>{
+        var data = res.json();
+        console.log('RESPONSE: ', data);
+        return data;
+    }).then(data=>{
+        console.log('this is data: ', data.data.objects[0].password);
+        userPassword = data.data.objects[0].password;
+        userLogin = data.data.objects[0].login;
+        
+         //сравнить сравнить введеный пароль (1 111111_2) с хэшом из БД на сервере И логин с клиента с логином БД.
+         //вернуть ответ клиенту.
+        if(userPassword != '' && userLogin != ''){
+            if(userPassword== req.body.password ){
+                res.json({hash: userPassword})
                 console.log('GOOD')
             }
             else{
-                console.log('DB password', user[0].password)
+                console.log('DB password', userPassword)
                 res.json({hash: ''})
                 console.log('EMPTY')
             }
@@ -669,10 +685,14 @@ app.post('/api/sign-in', urlencodedParser, (req,res)=>{
             console.log('NOT FOUND')
         }
     })
+   
+
+    
+        
 })
 app.post('/api/auth', urlencodedParser, (req, res)=>{
     console.log('AUTH', req.headers.authorization)
-    if(req.headers.authorization == 'ok123'){
+    if(req.headers.authorization == '111111_2'){
         res.json({isLog: true})
     }
     else{

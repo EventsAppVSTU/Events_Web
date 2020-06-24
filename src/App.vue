@@ -41,7 +41,7 @@
                   <input type="checkbox" class="form-check-input" id="exampleCheck1">
                   <label class="form-check-label" for="exampleCheck1">Check me out</label>
                 </div>
-                <button type="submit" class="btn btn-danger btn-rounded" v-on:click="signIn()">Submit</button>
+                <button type="submit" class="btn btn-danger btn-rounded" v-on:click="signIn($event)">Submit</button>
               </form>
             </div>
           </div>
@@ -213,10 +213,13 @@ export default {
       return data
     }).then(data=>{
       this.isLog = data.isLog 
-      this.isLog = true
+      // this.isLog = true
     })
     },
-    signIn(){
+    signIn(event){
+      if (event) {
+        event.preventDefault()
+      }
       // взять данные с формы
       var data = {
         login: this.login,
@@ -248,8 +251,12 @@ export default {
           this.isLog = true
           localStorage.hash = data.hash
           
-          localStorage.hash = "ok123"
+          // localStorage.hash = "ok123"
           console.log('cppkie', localStorage)
+          this.checkAutorization;
+          // setTimeout(() => {
+          //   console.log('reload')
+          // }, 3000);
           }
       })
       // принять токен

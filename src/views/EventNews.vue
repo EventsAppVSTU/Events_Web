@@ -6,19 +6,23 @@
       <router-link to="/createNews" class="btn btn-outline-danger btn-rounded">+ Create</router-link>
       </div>
 
-    <div class="event-card" v-for="newsCard in filteredNews" :key="newsCard.name">
+    <div class="event-card" v-for="(newsCard, index) in filteredNews" :key="newsCard.name">
       <hr class="event-card_hr">
       <div v-if="newsCard.image" class="event-card_img-container" v-on:click="setCurrentEvent(eventCard.id)">
         <img  :src="newsCard.image" alt="">
       </div>
-      <div class="news-sm-avatar">
+      <!-- <div class="news-sm-avatar">
 
-      </div>
+      </div> -->
       <div class="card-body">
         <h2 class="event-card_header">{{newsCard.name}}</h2>
-        <p class="event-card_description">{{newsCard.description}}</p>
+        <p class="news-card_description" :class="{'short-text' : !(pressedButtonIndex == index)}">{{newsCard.description}}</p>
+        <button v-if="newsCard.description.length > 55" class="news-button-more"  v-on:click="expandThisNews(index)">
+          More <svg class="feather" :class="{'rotate-news-arrow': pressedButtonIndex == index}">
+                  <use xlink:href="@/assets/feather-sprite.svg#chevron-right"/>
+              </svg>
+        </button>
       </div>
-      <!-- <p>{{eventCard.image}}</p> -->
     </div>
       </div>
 </template>
@@ -44,7 +48,8 @@ export default {
         description: "Lorem ipsum dolor sit amet orem ipsum dolor sit amet orem ipsum dolor sit amet orem ipsum dolor sit amet.",
         image: "@/assets/nasa-Q1p7bh3SHj8-unsplash.jpg",
       }],
-      searchString: ''
+      searchString: '',
+      pressedButtonIndex: ''
     }
   },
   methods:{
@@ -71,8 +76,15 @@ export default {
                   this.newsCards = data.data.objects;
               })
           },
-          getImgUrl(pic) {
-            return require('../assets/' + pic);
+          expandThisNews(newsIndex){
+            // alert(`news index ${newsIndex}`)
+            if (this.pressedButtonIndex == '') {
+              this.pressedButtonIndex = newsIndex;
+            }
+            else{
+              this.pressedButtonIndex = ''
+            }
+
           },
           // setCurrentEvent(eventID){
           //   alert('событие установленно')
@@ -173,14 +185,36 @@ export default {
     cursor: pointer;
     position: absolute;
 }
-p.event-card_description{
+p.news-card_description{
   width: 80%;
+}
+.short-text{
   text-overflow: ellipsis;
   /* white-space: nowrap; */
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+}
+.news-button-more{
+  border: none;
+  color: #999;
+  background: none;
+  outline: none;
+  font-size: 1rem;
+  line-height: 1rem;
+  padding: 0;
+  margin: 0;
+}
+.news-button-more:hover{
+  color: #848484;
+}
+.news-button-more:active, .news-button-more:focus{
+  outline: none;
+}
+.rotate-news-arrow{
+  transition: 1s;
+  transform: rotate(-90deg);
 }
 .toolbar{
     padding: 0rem 1rem 3rem;

@@ -197,8 +197,12 @@ p.event-card_description{
     border: 1px solid #999;
     padding: .3rem 1.2rem;
     margin-right:  1rem;
-
+    outline: none;
     /* background-color: #f2f2f2; */
+}
+.events-toolbar>input:active, .events-toolbar>input:focus{
+    outline: none;
+    border: 1px solid #ff004d;
 }
 @media(max-width:800px){
     #sidebar-nav{
