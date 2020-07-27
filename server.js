@@ -29,7 +29,22 @@ app.get('/api', urlencodedParser, (req, res,)=>{ //выдает страницу
 //С сервером работает
 app.get('/api/events', urlencodedParser, (req, res)=>{
     console.log('😅 getting events')
-    fetch('http://yaem.online/robo/events/events.php', {
+    // fetch('http://yaem.online/robo/events/events.php', {
+    //     method: 'GET',
+    //     headers: { 
+    //         'Content-Type': 'application/json',
+    //         'Accept': 'application/json',
+    //         'Authorization': '1 111111_2'
+    //     }
+    // }).then(res=>{
+    //     var data = res.json();
+    //     console.log('RESPONSE: ', data);
+    //     return data
+    // }).then(data=>{
+    //     console.log('this is data: ', data);
+    //     res.json(data);
+    // })
+    fetch('http://yaem.online/robo/events/eventsInfo.php', {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json',
@@ -84,8 +99,8 @@ app.post('/api/create-new-event', urlencodedParser, (req, res)=>{
 //_______________________________________________________
 
 app.get('/api/event-news', urlencodedParser, (req, res)=>{
-    console.log('😅 getting events news')
-    fetch('http://yaem.online/robo/events/eventNews.php', {
+    console.log('😅 getting events news ', req.query.event_id)
+    fetch(`http://yaem.online/robo/events/eventNews.php?event_id=${req.query.event_id}`, {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json',
@@ -130,6 +145,28 @@ app.post('/api/create-news', urlencodedParser, (req, res)=>{
     
     res.redirect('/');
 
+})
+app.post('/api/delete-event-news', urlencodedParser, (req, res)=>{
+    if(req.body.id != undefined){
+            //удалить текущие событие у админа
+        //Удалить событие
+        console.log('will delete')
+        fetch(`http://yaem.online/robo/events/eventNews.php?id=${req.body.id}`, {
+            method: 'DELETE',
+            headers: { 
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'application/json',
+                'Authorization': '1 111111_2'
+            }
+        }).then(res=>{
+            var data = res.json();
+            console.log('RESPONSE: ', data);
+            return data
+        }).then(data=>{
+            console.log('this is data: ', data);
+            res.json(data);
+        })
+    }
 })
 
 //____________________Текущее событие______________________
@@ -286,68 +323,81 @@ app.post('/api/delete-event-by-id', urlencodedParser, (req, res)=>{
     
 })
 
-//____________Выступления. Старые_____________________
+//____________Выступления. _____________________
 //____________________________________________________
 
 //Новое
 app.get('/api/get-performances-by-id', urlencodedParser, (req, res)=>{
-    Performance.findAll({
-        where:{
-            eventID: req.query.event
+    fetch(`http://yaem.online/robo/performances/performances.php?event_id=${req.query.event}`, {
+        method: 'GET',
+        headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': '1 111111_2'
         }
-    }).then((performance)=>{
-        res.json(performance)
+    }).then(res=>{
+        return res.json()
+    }).then(data=>{
+        console.log('this is performances on event', data)
+        res.json(data)
     })
+
 })
 
 //новое
 app.post('/api/create-performance-by-id', urlencodedParser, (req, res)=>{
-    var pName = req.body.name;
-    var pDate = req.body.date;
-    var pTime = req.body.time;
-    var pSpeaker = req.body.speaker;
-    var pEvent = req.body.event;
-    console.log('Passed data: ', pName, pDate, pEvent)
-    Performance.create({
-        name: pName,
-        date: pDate,
-        time: pTime,
-        speaker: pSpeaker,
-        eventID: pEvent
+    console.log('Sending: ', req.body)
+    fetch(`http://yaem.online/robo/performances/performances.php`, {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': '1 111111_2'
+        },
+        body: JSON.stringify(req.body)
+    }).then(res=>{
+        return res.json()
+    }).then(data=>{
+        console.log('this is performances on event', data)
+        res.json(data)
     })
-    res.json({stat: 'good'})
     
 })
 
 app.post('/api/update-performance-by-id', urlencodedParser, (req, res)=>{
-    var pName = req.body.name;
-    var pDate = req.body.date;
-    var pTime = req.body.time;
-    var pSpeaker = req.body.speaker;
-    var pEvent = req.body.event;
-    console.log('Passed data: ', pName, pDate, pEvent)
-    Performance.update({
-        name: pName,
-        date: pDate,
-        time: pTime,
-        speaker: pSpeaker,
-        eventID: pEvent
-    }, {
-        where:{
-            id: req.body.id
-        }
+    
+    console.log('Sending upd: ', req.body)
+    fetch(`http://yaem.online/robo/performances/performances.php`, {
+    method: 'PUT',
+        headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': '1 111111_2'
+        },
+        body: JSON.stringify(req.body)
+    }).then(res=>{
+        return res.json()
+    }).then(data=>{
+        console.log('this is performances on event', data)
+        res.json(data)
     })
-    res.json({stat: 'good'})
 })
 
 app.post('/api/delete-performance-by-id', urlencodedParser, (req, res)=>{
-    console.log('Passed data: ', req.body.id)
-    Performance.destroy({
-        where:{
-            id: req.body.id
+    console.log('will delete', req.body.id)
+    fetch(`http://yaem.online/robo/performances/performances.php?id=${req.body.id}`, {
+    method: 'DELETE',
+        headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': '1 111111_2'
         }
+    }).then(res=>{
+        return res.json()
+    }).then(data=>{
+        console.log('Performance deleted', data)
+        res.json(data)
     })
-    res.json({stat: 'good'})
 })
 
 
@@ -650,7 +700,7 @@ app.post('/api/sign-in', urlencodedParser, (req,res)=>{
     console.log('AUTH')
     var userLogin = '';
     var userPassword = '';
-    //найти юзера по логину (так как пока нет такого фильтра, то искать по логину.)
+    //найти юзера по логину (так как пока нет такого фильтра, то искать по id.)
     fetch('http://yaem.online/robo/users/userCredentals.php?id=1', {
         method: 'GET',
         headers: { 
@@ -659,8 +709,9 @@ app.post('/api/sign-in', urlencodedParser, (req,res)=>{
             'Authorization': '1 111111_2'
         }
     }).then(res=>{
+        console.log('RESPONSE: ', res);
         var data = res.json();
-        console.log('RESPONSE: ', data);
+        console.log('RESPONSE data: ', data);
         return data;
     }).then(data=>{
         console.log('this is data: ', data.data.objects[0].password);
@@ -684,6 +735,8 @@ app.post('/api/sign-in', urlencodedParser, (req,res)=>{
             res.json({hash: 'No user found'})
             console.log('NOT FOUND')
         }
+    }).catch(error=>{
+        console.log(error)
     })
    
 

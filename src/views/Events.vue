@@ -11,9 +11,9 @@
       <div class="event-card_img-container" v-on:click="setCurrentEvent(eventCard.id)">
         <img :src="eventCard.image" alt="">
       </div>
+      <p class="event-card_category">{{eventCard.category_name}}</p>
       <h2 class="event-card_header">{{eventCard.name}}</h2>
       <p class="event-card_description">{{eventCard.description}}</p>
-      <!-- <p>{{eventCard.image}}</p> -->
     </div>
       </div>
 </template>
@@ -49,13 +49,6 @@ export default {
     }
   },
   methods:{
-    //"name": "Робоcr",
-        // "description": "Lorem ipsum dolor sit amet orem ipsum dolor sit amet orem ipsum dolor sit amet orem ipsum dolor sit amet.",
-        // "startDate": "2020-08-12",
-        // "endDate": "2020-08-12",
-        // "image": "https://source.unsplash.com/user/aaronburden/",
-        // "place": "Volgograd",
-        // "category_id": 1
     loadEvents: function(){
             console.log('loading..')
             fetch(`/api/events`, {
@@ -86,6 +79,7 @@ export default {
                   // endDate – дата окончания
                   // image – путь к файлу с картинкой (ПРИ ДОБАВЛЕНИИ И РЕДАКТИРОВАНИИ ИГНОРИРУЕТСЯ, добавляется по-другому)
                   // category_id – номер категории события
+                  // category_name - категория словами
                   
               })
           },
@@ -113,7 +107,7 @@ export default {
                   }
               }).then(data=>{
                   console.log(data);
-                  
+                  // this.$router.push('/currentEvent')
 
               })
           }
@@ -149,9 +143,7 @@ export default {
 <style>
 /* Events */
 .event-card{
-    /* background-color: #999; */
     width: 100%;
-    /* padding-top: 1rem; */
 }
 .event-card_hr{
     border: 0.5px solid #d7d7d7;
@@ -180,6 +172,10 @@ export default {
     cursor: pointer;
     position: absolute;
 }
+p.event-card_category{
+  color: #aeaeae;
+  margin: 0;
+}
 p.event-card_description{
   width: 80%;
   text-overflow: ellipsis;
@@ -190,7 +186,7 @@ p.event-card_description{
   -webkit-box-orient: vertical;
 }
 .toolbar{
-    padding: 0rem 1rem 3rem;
+  padding: 0rem 1rem 3rem;
 }
 .events-toolbar>input{
     border-radius: 5rem;

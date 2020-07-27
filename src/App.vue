@@ -14,14 +14,17 @@
           </div>
             <div class="header-right-side">
               <button href="" class="btn btn-ea-red" id="menu-toggle" v-on:click="toggleMenu()">menu</button>
-              <button v-on:click="logOut()" class="textBtn" :class="{'d-none': !isLog}">Log out</button>
+              <!-- :class="{'d-none': false}" -->
+              <button v-on:click="logOut()" class="textBtn" >Log out</button>
             </div>
 
         </div>
       <!-- </div> -->
     </header>
+    <!-- <router-view/> -->
 
-    <div class="signInBlock" v-if="!isLog">
+    <!-- <div class="signInBlock" v-if="!isLog">
+      <div class="signInBlock">
       <div class="container">
         <div class="row">
           <div class="col-md-12">
@@ -47,21 +50,20 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
-   <div v-if="isLog">
-     
-    
-    <!--  -->
+  <!-- <router-view v-if="isLog"/> -->
+   <!-- <div v-if="!isLog"> -->
+     <div> 
             <div class="container-fluid">
             <div class="row">
                 <div class="col-md-2">
                     <ul id="sidebar-nav" class="s-hidden">
-                        <!--  -->
+                        
                         <ul class="nav flex-column">
                             <li class="nav-item">
                               <span class="nav-link">
-                                <router-link to="/">
+                                <router-link to="/events">
                                 <svg class="feather">
                                     <use xlink:href="@/assets/feather-sprite.svg#home"/>
                                 </svg>
@@ -155,25 +157,23 @@
                             </li>
                           </ul>
                           
-                        <!--  -->
+                        
                     </ul>
                 </div>
                 <div class="col-md-10">
                     <div class="content">
                       <div class="container">
 
-                       <!-- app -->
-                        <!-- <h1>Welcome</h1> -->
-
+                       
                         <router-view/>
-                        <!-- <router-view></router-view> -->
+                        
 
                       </div>
                     </div>
                 </div>
             </div>
         </div>
-    <!--  -->
+    
    </div>
   </div>
 </template>
@@ -193,76 +193,76 @@ export default {
     }
   },
   methods:{
-    checkAutorization(){
-      // залезть в куки
-      // отослать на сервак
-      // принять ответ от сервака - правильный токен или нет
-      // выставить isLog
-      // alert('all is good')
-    console.log('cookie', localStorage.hash)
-    fetch('/api/auth', {
-      credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
-        method: 'POST',              // метод POST 
-        // body: JSON.stringify(),  // типа запрашиаемого документа
-        headers: new Headers({
-          'Content-Type': 'application/json',
-          'Authorization': localStorage.hash
-        })
-    }).then(res=>{
-      var data = res.json()
-      return data
-    }).then(data=>{
-      this.isLog = data.isLog 
-      // this.isLog = true
-    })
-    },
-    signIn(event){
-      if (event) {
-        event.preventDefault()
-      }
-      // взять данные с формы
-      var data = {
-        login: this.login,
-        password: this.password
-      }
-      // отправить на сервер
-      fetch('/api/sign-in',{
-        credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
-        method: 'POST',              // метод POST 
-        body: JSON.stringify(data),  // типа запрашиаемого документа
-        headers: new Headers({
-          'Content-Type': 'application/json'
-        })
-      }).then(res=>{
-        var data = res.json()
-        return data
-      }).then(data=>{
-        console.log(data)
-        if(data.hash == 'No user found'){
-          this.displayError = true
-          this.loginErrorMessage = 'No user found'
+    // checkAutorization(){
+    //   // залезть в куки
+    //   // отослать на сервак
+    //   // принять ответ от сервака - правильный токен или нет
+    //   // выставить isLog
+    //   // alert('all is good')
+    // console.log('cookie', localStorage.hash)
+    //   fetch('/api/auth', {
+    //     credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
+    //       method: 'POST',              // метод POST 
+    //       // body: JSON.stringify(),  // типа запрашиаемого документа
+    //       headers: new Headers({
+    //         'Content-Type': 'application/json',
+    //         'Authorization': localStorage.hash
+    //       })
+    //   }).then(res=>{
+    //     var data = res.json()
+    //     return data
+    //   }).then(data=>{
+    //     this.isLog = data.isLog 
+    //     // this.isLog = true
+    //   })
+    // },
+    // signIn(event){
+    //   if (event) {
+    //     event.preventDefault()
+    //   }
+    //   // взять данные с формы
+    //   var data = {
+    //     login: this.login,
+    //     password: this.password
+    //   }
+    //   // отправить на сервер
+    //   fetch('/api/sign-in',{
+    //     credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
+    //     method: 'POST',              // метод POST 
+    //     body: JSON.stringify(data),  // типа запрашиаемого документа
+    //     headers: new Headers({
+    //       'Content-Type': 'application/json'
+    //     })
+    //   }).then(res=>{
+    //     var data = res.json()
+    //     return data
+    //   }).then(data=>{
+    //     console.log(data)
+    //     if(data.hash == 'No user found'){
+    //       this.displayError = true
+    //       this.loginErrorMessage = 'No user found'
           
-        }
-        else if(data.hash == ''){
-          this.displayError = true
-          this.loginErrorMessage = 'Incorrect'
-        }
-        else{
-          this.isLog = true
-          localStorage.hash = data.hash
+    //     }
+    //     else if(data.hash == ''){
+    //       this.displayError = true
+    //       this.loginErrorMessage = 'Incorrect'
+    //     }
+    //     else{
+    //       this.isLog = true
+    //       localStorage.hash = data.hash
           
-          // localStorage.hash = "ok123"
-          console.log('cppkie', localStorage)
-          this.checkAutorization;
-          // setTimeout(() => {
-          //   console.log('reload')
-          // }, 3000);
-          }
-      })
+    //       // localStorage.hash = "ok123"
+    //       console.log('cppkie', localStorage)
+    //       this.checkAutorization;
+    //       // setTimeout(() => {
+    //       //   console.log('reload')
+    //       // }, 3000);
+    //       }
+    //   })
       // принять токен
       
       //отобразить приложение
-    },
+    // },
     toggleMenu(){
       var sidebar = document.getElementById('sidebar-nav');
       sidebar.classList.toggle('s-hidden');
@@ -271,11 +271,20 @@ export default {
     },
     logOut(){
       localStorage.hash = ''
-      this.checkAutorization()
+      this.$root.isAuth = false
+      this.$router.push('login')
+      // this.checkAutorization()
     }
   },
   mounted(){
-    this.checkAutorization()
+    // this.checkAutorization()
+    //если не пустой, то можно
+    // if(localStorage.hash = ''){
+    //   this.isLog = false
+    // }
+    // else{
+    //   this.isLog = true
+    // }
   }
 }
 </script>
@@ -301,6 +310,19 @@ export default {
 #nav a.router-link-exact-active {
   color: #42b983;
 } */
+.message-empty-content{
+  padding: 2rem;
+  text-align: center;
+  color: #676767;
+  /* font-size: 1.2rem; */
+}
+.text-button{
+  font-weight: 600;
+  color: #ff004d;
+}
+.text-button:hover{
+  color: #ff6492;
+}
 a{
   color:  #333333;
 }

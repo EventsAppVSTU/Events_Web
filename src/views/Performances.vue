@@ -1,24 +1,30 @@
 <template>
   <div class="Performances">
     <h2>Performances</h2>
-        <form id="#per"  class="performance-form">
+        <!-- <form id="#per"  class="performance-form">
           <input type="text" class="performance-add" placeholder="name" name="name" v-model="perf.name">
-          <input type="text" class="performance-add" placeholder="date" name="date" v-model="perf.date">
-          <input type="text" class="performance-add" placeholder="time" name="time" v-model="perf.time">
+          <input type="text" class="performance-add" placeholder="description" name="description" v-model="perf.description">
+          <input type="text" class="performance-add" placeholder="date" name="date" v-model="perf.datePerf">
+          <input type="text" class="performance-add" placeholder="time" name="time" v-model="perf.startTime">
+          <input type="text" class="performance-add" placeholder="time" name="time" v-model="perf.endTime">
           <input type="text" class="performance-add" placeholder="speaker" name="speaker" v-model="perf.speaker">
-          <input type="text" class="performance-add hide" :value="currentEvent.id" name="event">
-          <!-- Выше был :value="currentEvent.name" -->
-          <!-- <input type="submit" class="btn btn-outline-danger btn-rounded" value="+ Create"> -->
+          <input type="text" class="performance-add hide" :value="currentEvent.id" name="event_id">
           <button class="btn btn-outline-danger btn-rounded" v-on:click="createPerformance()">+ Create</button>
-        </form>
-        <!-- <p>{{currentEvent}}</p> -->
-        <table class="table table-striped table-responsive-lg table-sm">
+        </form> -->
+        <CreatePerformance :event_id="currentEvent.id" @updatePerfTable="updatePerformancesTable" />
+        <div v-if="performances == ''" class="message-empty-content">
+          <h5>Нет выступлений</h5>
+          <p>Добавьте новость, нажав на кнопку "Созадать запись"</p>
+        </div>
+        <table v-else class="table table-striped table-responsive-lg table-sm">
           <thead>
             <tr>
               <th>#</th>
               <th>Name</th>
               <th>Date</th>
-              <th>Time</th>
+              <th>Description</th>
+              <th>Start Time</th>
+              <th>End Time</th>
               <th>Speaker</th>
               <th>More</th>
             </tr>
@@ -26,22 +32,23 @@
           <tbody>
             <tr v-for="(performance, index) in performances" :key="performance.id">
               <td>
-                <!-- <input type="checkbox" name="name1" id=""> -->
                 {{performance.id}} 
               </td>
               <td>
                 <input class="table-display-input table-event-name" type="text" v-model="performance.name" :disabled="isDisabled">
-                <!-- {{performance.name}}</td> -->
                 <td>
-                  <!-- {{performance.date}} -->
-                  <input class="table-display-input table-event-name" type="text" v-model="performance.date" :disabled="isDisabled">
+                  <input class="table-display-input table-event-name" type="text" v-model="performance.datePerf" :disabled="isDisabled">
                 </td>
                 <td>
-                  <!-- {{performance.time}} -->
-                  <input class="table-display-input table-event-name" type="text" v-model="performance.time" :disabled="isDisabled">
+                  <input class="table-display-input table-event-name" type="text" v-model="performance.description" :disabled="isDisabled">
+                </td>
+                <td>
+                  <input class="table-display-input table-event-name" type="text" v-model="performance.startTime" :disabled="isDisabled">
+                </td>
+                <td>
+                  <input class="table-display-input table-event-name" type="text" v-model="performance.endTime" :disabled="isDisabled">
                   </td>
                 <td>
-                  <!-- {{performance.speaker}} -->
                   <input class="table-display-input table-event-name" type="text" v-model="performance.speaker" :disabled="isDisabled">
                   </td>
                 <td>
@@ -58,13 +65,12 @@
 </template>
 
 <script>
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
+import CreatePerformance from '../components/CreatePerformance.vue'
 
 export default {
   name: 'Performances',
   components: {
-   
+   CreatePerformance
   },
   data: function(){
     return {
@@ -94,10 +100,12 @@ export default {
             speaker: "Иван Иванов"}],
       perf: {
         name: '',
-        date: '',
-        time: '',
+        datePerf: '',
+        description: '',
+        startTime: '',
+        endTime: '',
         speaker: '',
-        
+        event_id: ''
       },
       isDisabled: true,
       editBtn: 'Edit'
@@ -123,11 +131,11 @@ export default {
                 throw new Error ('er');
             }
       }).then(one=>{
-        console.log('event data', one)
-        this.currentEvent = one[0]
-        console.log(one[0].name)
+        console.log('event data', one.data.objects)
+        this.currentEvent = one.data.objects[0]
+        console.log(one.data.objects[0].name)
           //запросить выступления
-        fetch(`/api/get-performances-by-id?event=${one[0].id}`, {
+        fetch(`/api/get-performances-by-id?event=${one.data.objects[0].id}`, {
           headers : { 
                   'Content-Type': 'application/json',
                   'Accept': 'application/json'
@@ -144,39 +152,18 @@ export default {
             }
         }).then(data=>{
           console.log('performances', data)
-              this.performances = data
-          // for(var i=0; i<data.length; i++){
-          //   this.performances[i].id = data[i].id
-          //   this.performances[i].name = data[i].name
-          //   this.performances[i].date = data[i].date
-          //   this.performances[i].time = data[i].time
-          //   this.performances[i].speaker = data[i].speaker
-          //   this.performances[i].isDisabled = true
-          //   this.performances[i].editButton = 'Edit'
-          // }
+              this.performances = data.data.objects
         })
       })
     },
     createPerformance(){
-      //взять данные
-      var data ={
-        name: '',
-        date: '',
-        time: '',
-        speaker: '',
-        event: ''
-      }
+      this.perf.event_id = this.currentEvent.id
       if(this.perf.name){
-        data.name = this.perf.name
-        data.date = this.perf.date
-        data.time = this.perf.time
-        data.speaker = this.perf.speaker
-        data.event = this.currentEvent.id //old: .name
-        console.log('send info', data)
+        
         fetch(`/api/create-performance-by-id`, {
         credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
         method: 'POST',              // метод POST 
-        body: JSON.stringify(data),  // типа запрашиаемого документа
+        body: JSON.stringify(this.perf),  // типа запрашиаемого документа
         headers: new Headers({
           'Content-Type': 'application/json'
         }),
@@ -189,7 +176,6 @@ export default {
         this.updatePerformancesTable()
       })
       }
-      //отправить на сервер POST запросом
       
     },
     editPerformance(index){
@@ -206,19 +192,23 @@ export default {
       //сохранить запись на сервер если Done
       //взять данные
       var data ={
-        id: Number,
+        id: '',
         name: '',
-        date: '',
-        time: '',
+        datePerf: '',
+        description: '',
+        startTime: '',
+        endTime: '',
         speaker: '',
-        event: ''
+        event_id: ''
       }
         data.id = this.performances[index].id
         data.name = this.performances[index].name
-        data.date = this.performances[index].date
-        data.time = this.performances[index].time
+        data.datePerf = this.performances[index].datePerf
+        data.description = this.performances[index].description
+        data.startTime = this.performances[index].startTime
+        data.endTime = this.performances[index].endTime
         data.speaker = this.performances[index].speaker
-        data.event = this.currentEvent.id //old: .name
+        data.event_id = this.currentEvent.id //old: .name
         console.log('send info', data)
         fetch(`/api/update-performance-by-id`, {
         credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
@@ -238,27 +228,30 @@ export default {
     },
     deletePerformance(index){
       //взять данные
+      var answer = confirm()
       var data = {
         id: Number
       }
-      data.id = this.performances[index].id
-      //отправить на сервер DELETE запросом
-      console.log('data', JSON.stringify(data))
-      fetch(`/api/delete-performance-by-id`, {
-        credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
-        method: 'POST',              // метод POST 
-        body: JSON.stringify(data),  // типа запрашиаемого документа
-        headers: new Headers({
-          'Content-Type': 'application/json'
-        }),
-      })
-      .then(response => {
-        return response // возвращаем промис
-
-      }).then(json=>{
-        console.log('succsess ', json)
-        this.updatePerformancesTable()
-      })
+      if(answer){
+        data.id = this.performances[index].id
+        //отправить на сервер DELETE запросом
+        console.log('data', JSON.stringify(data))
+        fetch(`/api/delete-performance-by-id`, {
+          credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
+          method: 'POST',              // метод POST 
+          body: JSON.stringify(data),  // типа запрашиаемого документа
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          }),
+        })
+        .then(response => {
+          return response // возвращаем промис
+  
+        }).then(json=>{
+          console.log('succsess ', json)
+          this.updatePerformancesTable()
+        })
+      }
     },
     
   },

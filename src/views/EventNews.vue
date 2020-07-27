@@ -2,9 +2,14 @@
  <div>
    <h2>News</h2>
       <div class="events-toolbar">
-      <input type="text" placeholder="Search Event" v-model="searchString">
+      <input type="text" placeholder="Search News" v-model="searchString">
       <router-link to="/createNews" class="btn btn-outline-danger btn-rounded">+ Create</router-link>
       </div>
+
+<div v-if="filteredNews == ''" class="message-empty-content">
+  <h5>Нет новостей</h5>
+  <p>Добавьте новость, нажав на кнопку "+ Create"</p>
+</div>
 
     <div class="event-card" v-for="(newsCard, index) in filteredNews" :key="newsCard.name">
       <hr class="event-card_hr">
@@ -15,7 +20,10 @@
 
       </div> -->
       <div class="card-body">
-        <h2 class="event-card_header">{{newsCard.name}}</h2>
+        <div class="news-header">
+          <h2>{{newsCard.name}}</h2>
+          <button class="btn btn-outline-danger" @click="deleteNews(index)">delete</button>
+        </div>
         <p class="news-card_description" :class="{'short-text' : !(pressedButtonIndex == index)}">{{newsCard.description}}</p>
         <button v-if="newsCard.description.length > 55" class="news-button-more"  v-on:click="expandThisNews(index)">
           More <svg class="feather" :class="{'rotate-news-arrow': pressedButtonIndex == index}">
@@ -53,9 +61,10 @@ export default {
     }
   },
   methods:{
-    loadNews: function(){
+      loadNews: function(){
             console.log('loading..')
-            fetch(`/api/event-news`, {
+            var currentEvent = this.$root.currentEvent;
+            fetch(`/api/event-news?event_id=${currentEvent}`, {
             headers : { 
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
@@ -75,9 +84,8 @@ export default {
                   console.log(data.data.objects);
                   this.newsCards = data.data.objects;
               })
-          },
-          expandThisNews(newsIndex){
-            // alert(`news index ${newsIndex}`)
+        },
+        expandThisNews(newsIndex){
             if (this.pressedButtonIndex == '') {
               this.pressedButtonIndex = newsIndex;
             }
@@ -85,36 +93,59 @@ export default {
               this.pressedButtonIndex = ''
             }
 
-          },
-          // setCurrentEvent(eventID){
-          //   alert('событие установленно')
-          //   fetch(`/api/set-current-event-by-id?user=admin&event=${eventID}`, {
-          //   headers : { 
-          //       'Content-Type': 'application/json',
-          //       'Accept': 'application/json'
-          //   }
+        },
+        deleteNews(index){
+          var answer = confirm()
+          if (answer){
+            var data ={
+              id: this.newsCards[index].id
+            }
+            fetch(`/api/delete-event-news`, {
+              credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
+              method: 'POST',              // метод POST 
+              body: JSON.stringify(data),  // типа запрашиаемого документа
+              headers: new Headers({
+                'Content-Type': 'application/json'
+              }),
+            }).then(res=>{
+              return res.json()
+            }).then(data=>{
+              console.log(data)
+              this.loadNews()
+            })
+          }
+        },
+        getCurrentEvent(){
+// из currentEvent
+      console.log('getting...')
+      return new Promise((resolve, reject)=>{
+        fetch('/api/get-current-event-by-id?user=admin').then(res=>{
+              if(res.ok){
+                  var data = res.json();
+                  console.log('OK')
+                  return data;
+              }
+              else{
+                  console.log('er get rooms :(');
+                  throw new Error ('er');
+              }
+          }).then(data=>{
+              console.log('current event data',data.data.objects[0])
+              this.currentEvent = data.data.objects[0];
+              this.$root.currentEvent = data.data.objects[0].id;
+              resolve('ok')
+          }).catch(error=>{
+            reject(error)
+          })
 
-          //   }).then(res=>{
-          //     console.log('here')
-          //         if(res.ok){
-          //             // var data = res.json();
-          //             console.log(res);
-          //             return res;
-          //         }
-          //         else{
-          //             console.log('er get rooms :(');
-          //             throw new Error ('er');
-          //         }
-          //     }).then(data=>{
-          //         console.log(data);
-                  
-
-          //     })
-          // }
+      })
+    }
   },
   mounted(){
     // alert('i am ready')
-        this.loadNews();
+    this.getCurrentEvent().then(()=>{
+      this.loadNews();
+    })
   },
   computed: {
     filteredNews: function(){
@@ -226,6 +257,12 @@ p.news-card_description{
     margin-right:  1rem;
 
     /* background-color: #f2f2f2; */
+}
+.news-header{
+  display: flex;
+}
+.news-header>h2{
+  flex-grow: 1;
 }
 @media(max-width:800px){
     #sidebar-nav{

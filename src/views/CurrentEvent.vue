@@ -11,10 +11,16 @@
               </div>
           </h2>
           <div class="event-card_img-container">
-              <img :src="currentEvent.image" alt="">
+              <img v-if="$root.pictureUrl != ''" :src="$root.pictureUrl" alt="">
+              <img v-else :src="currentEvent.image" alt="">
           </div>
-          <input type="text" name="image" class="input-photo-link" id="image" v-model="currentEvent.image" :disabled="isDisabled">
-
+          <!-- <input type="text" name="image" class="input-photo-link" id="image" v-model="currentEvent.image" :disabled="isDisabled"> -->
+          <div class="upload-image-container" v-show="!isDisabled">
+            <input v-if="$root.pictureUrl != ''" :src="$root.pictureUrl" type="text" name="image" id="image" class="input-photo-link" placeholder="Link to the Photo" v-model="$root.pictureUrl ">
+            <input v-else :src="currentEvent.image" type="text" name="image" id="image" class="input-photo-link" placeholder="Link to the Photo" v-model="currentEvent.image ">
+            <Upload/>
+            
+          </div>
           <!-- <h3 class="current-event_decription-header">Описание</h3>
           <textarea name="description" id="description" rows="2" @input="fixTextareaSize()" placeholder="Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias suscipit totam quis ab saepe dolore aliquid provident quas aliquam cupiditate nobis doloremque porro ut eum dolorem architecto unde, repudiandae corporis." :disabled="isDisabled"></textarea>
           <h3 class="current-event_decription-header">Стоймость участия</h3>
@@ -42,12 +48,12 @@
 </template>
 
 <script>
-
+import Upload from '../components/Upload.vue'
 
 export default {
   name: 'CurrentEvent',
   components: {
-   
+   Upload
   },
   data: function(){
     return {
@@ -57,7 +63,7 @@ export default {
         description: "Lorem ipsum dolor sit amet orem ipsum dolor sit amet orem ipsum dolor sit amet orem ipsum dolor sit amet.",
         startDate: '',
         endDate: '',
-        image: "@/assets/nasa-Q1p7bh3SHj8-unsplash.jpg",
+        image: "",
         place: '',
         category_id: Number
       },
@@ -81,6 +87,7 @@ export default {
         }).then(data=>{
             console.log('current event data',data.data.objects[0])
             this.currentEvent = data.data.objects[0];
+            this.$root.currentEvent = data.data.objects[0].id;
         })
     },
     edit(){
@@ -94,7 +101,9 @@ export default {
         this.isDisabled = true
         //взять инфу и отправить
         console.log(this.currentEvent.name)
-         
+        if(this.$root.pictureUrl  != ''){
+          this.currentEvent.image = this.$root.pictureUrl 
+        }
         fetch(`/api/update-event`, {
           credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
           method: 'POST',              // метод POST 
@@ -143,6 +152,7 @@ export default {
       this.fixTextareaSize()
     }, 500);
     this.$emit('input')
+    this.$root.pictureUrl = this.currentEvent.image
   }
 }
 </script>

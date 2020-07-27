@@ -8,9 +8,13 @@
           <div class="event-card_img-container">
               <!-- <input type="file" name="image" id="image"> -->
               <!-- <label for="photo">Выбирите фото</label> -->
-              <img src="../assets/photo-icon.png" alt="">
+              <img :src="$root.pictureUrl" alt="">
           </div>
-          <input type="text" name="image" id="image" class="input-photo-link" placeholder="Link to the Photo">
+          <div class="upload-image-container">
+            <input type="text" name="image" id="image" class="input-photo-link" placeholder="Link to the Photo" v-model="$root.pictureUrl">
+            <Upload/>
+            
+          </div>
           <h3 class="current-event_decription-header">Описание</h3>
           <textarea name="description" id="description" cols="30" rows="6" placeholder="Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias suscipit totam quis ab saepe dolore aliquid provident quas aliquam cupiditate nobis doloremque porro ut eum dolorem architecto unde, repudiandae corporis."></textarea>
           <h3 class="current-event_decription-header">Начало события</h3>
@@ -33,12 +37,12 @@
 </template>
 
 <script>
-
+import Upload from '../components/Upload.vue'
 
 export default {
   name: 'CreateEvent',
   components: {
-   
+   Upload
   },
   methods:{
     createEvent(){
@@ -59,7 +63,9 @@ export default {
 }
 .input-photo-link{
   padding: .5rem;
+  margin-right: 3rem;
   width: 40%;
+  height: 3rem;
 }
 .current-event_header>input:disabled{
   color: #333333;
@@ -88,5 +94,9 @@ export default {
 }
 .current-event_settings{
     /* display: inline-block; */
+}
+.upload-image-container{
+  display: flex;
+  flex-direction: row;
 }
 </style>
