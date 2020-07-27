@@ -13,14 +13,18 @@ app.use(express.static('public'));
 
 
 //_________start server_________
-app.listen(3000, err => {
-    if (!err) console.log('Server started on 3000 port');
-    else console.error('Server not started');
-})
+// app.listen(3000, err => {
+//     if (!err) console.log('Server started on 3000 port');
+//     else console.error('Server not started');
+// })
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}.`);
+});
 
 //___________routes__________
 app.get('/', urlencodedParser, (req, res,)=>{ //выдает страницу в браузер
-    // res.sendFile(__dirname + '/index.html/')
+    res.sendFile(__dirname + '/index.html/')
 })
 app.get('/api', urlencodedParser, (req, res,)=>{ //выдает страницу в браузер
     // res.send('hahaahahahh')
