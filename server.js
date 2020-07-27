@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 const urlencodedParser = bodyParser.urlencoded({extended: false}) //включение парсера
 console.log("hello!!!!! how are you ?))))")
 
-app.use(express.static('public'));
+app.use(express.static('dist'));
 
 
 //_________start server_________
