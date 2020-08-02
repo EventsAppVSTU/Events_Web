@@ -1,12 +1,7 @@
 <template>
   <div id="app">
-    <!-- <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/events">Events</router-link>
-      <router-link to="/performances">About</router-link>
-    </div> -->
     <header>
-      <!-- <div class="container"> -->
+      
         <div class="header-row">
           <div class="logo-container">
             <img src="@/assets/appicon.png" class="logo" alt="" srcset="">
@@ -14,47 +9,15 @@
           </div>
             <div class="header-right-side">
               <button href="" class="btn btn-ea-red" id="menu-toggle" v-on:click="toggleMenu()">menu</button>
-              <!-- :class="{'d-none': false}" -->
-              <button v-on:click="logOut()" class="textBtn" >Log out</button>
+              <button v-if="isLog" v-on:click="logOut()" class="textBtn" >Log out</button>
             </div>
 
         </div>
-      <!-- </div> -->
     </header>
-    <!-- <router-view/> -->
 
-    <!-- <div class="signInBlock" v-if="!isLog">
-      <div class="signInBlock">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12">
-            <h2>Sign in</h2>
-            <div class="signInBlock_form">
-              <form>
-                <div class="form-group">
-                  <label for="exampleInputEmail1">Email address</label>
-                  <input type="text" class="form-control" name="login" id="login" aria-describedby="emailHelp" placeholder="Enter email" v-model="login">
-                  <small id="emailHelp" class="form-text text-muted" :class="{'invalid-feedbak': displayError}">{{loginErrorMessage}}</small>
-                </div>
-                <div class="form-group">
-                  <label for="exampleInputPassword1">Password</label>
-                  <input type="password" class="form-control" name="password" id="password" placeholder="Password" v-model="password">
-                </div>
-                <div class="form-group form-check">
-                  <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                  <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                </div>
-                <button type="submit" class="btn btn-danger btn-rounded" v-on:click="signIn($event)">Submit</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
-
-  <!-- <router-view v-if="isLog"/> -->
-   <!-- <div v-if="!isLog"> -->
-     <div> 
+<!-- Для отображения формы входа -->
+  <router-view v-if="!isLog" @checkAuthAgain="checkAuth()"/>
+   <div v-show="isLog">
             <div class="container-fluid">
             <div class="row">
                 <div class="col-md-2">
@@ -163,11 +126,7 @@
                 <div class="col-md-10">
                     <div class="content">
                       <div class="container">
-
-                       
                         <router-view/>
-                        
-
                       </div>
                     </div>
                 </div>
@@ -185,7 +144,7 @@ export default {
   name: 'App',
   data: function(){
     return {
-      isLog: false,
+      isLog: '',
       login: '',
       password: '', 
       displayError: false,
@@ -193,76 +152,12 @@ export default {
     }
   },
   methods:{
-    // checkAutorization(){
-    //   // залезть в куки
-    //   // отослать на сервак
-    //   // принять ответ от сервака - правильный токен или нет
-    //   // выставить isLog
-    //   // alert('all is good')
-    // console.log('cookie', localStorage.hash)
-    //   fetch('/api/auth', {
-    //     credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
-    //       method: 'POST',              // метод POST 
-    //       // body: JSON.stringify(),  // типа запрашиаемого документа
-    //       headers: new Headers({
-    //         'Content-Type': 'application/json',
-    //         'Authorization': localStorage.hash
-    //       })
-    //   }).then(res=>{
-    //     var data = res.json()
-    //     return data
-    //   }).then(data=>{
-    //     this.isLog = data.isLog 
-    //     // this.isLog = true
-    //   })
-    // },
-    // signIn(event){
-    //   if (event) {
-    //     event.preventDefault()
-    //   }
-    //   // взять данные с формы
-    //   var data = {
-    //     login: this.login,
-    //     password: this.password
-    //   }
-    //   // отправить на сервер
-    //   fetch('/api/sign-in',{
-    //     credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
-    //     method: 'POST',              // метод POST 
-    //     body: JSON.stringify(data),  // типа запрашиаемого документа
-    //     headers: new Headers({
-    //       'Content-Type': 'application/json'
-    //     })
-    //   }).then(res=>{
-    //     var data = res.json()
-    //     return data
-    //   }).then(data=>{
-    //     console.log(data)
-    //     if(data.hash == 'No user found'){
-    //       this.displayError = true
-    //       this.loginErrorMessage = 'No user found'
-          
-    //     }
-    //     else if(data.hash == ''){
-    //       this.displayError = true
-    //       this.loginErrorMessage = 'Incorrect'
-    //     }
-    //     else{
-    //       this.isLog = true
-    //       localStorage.hash = data.hash
-          
-    //       // localStorage.hash = "ok123"
-    //       console.log('cppkie', localStorage)
-    //       this.checkAutorization;
-    //       // setTimeout(() => {
-    //       //   console.log('reload')
-    //       // }, 3000);
-    //       }
-    //   })
-      // принять токен
-      
-      //отобразить приложение
-    // },
+    checkAuth(){
+        this.requests.checkAuthorization().then(data=>{
+          console.log(data)
+          this.isLog = data
+        })
+    },
     toggleMenu(){
       var sidebar = document.getElementById('sidebar-nav');
       sidebar.classList.toggle('s-hidden');
@@ -273,11 +168,14 @@ export default {
       localStorage.hash = ''
       this.$root.isAuth = false
       this.$router.push('login')
-      // this.checkAutorization()
+      this.requests.checkAuthorization().then(data=>{
+       console.log(data)
+       this.isLog = data
+     })
     }
   },
   mounted(){
-    // this.checkAutorization()
+     this.checkAuth()
     //если не пустой, то можно
     // if(localStorage.hash = ''){
     //   this.isLog = false
@@ -310,6 +208,19 @@ export default {
 #nav a.router-link-exact-active {
   color: #42b983;
 } */
+/* @media(prefers-color-scheme: light){
+  body{
+    background-color: white;
+    color: black;
+  }
+}
+@media(prefers-color-scheme: dark){
+  body{
+    background-color:black;
+    color: white;
+  }
+} */
+
 .message-empty-content{
   padding: 2rem;
   text-align: center;

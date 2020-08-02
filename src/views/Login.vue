@@ -91,7 +91,7 @@ export default {
           // this.checkAutorization;
           console.log(this.$route.params.nextUrl)
           this.$router.replace('events')
-
+          this.$emit('checkAuthAgain');
           }
       })
       }

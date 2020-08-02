@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import firebase from 'firebase'
 import Store from './store'
+import requests from './requests'  //Запросы
 
 Vue.config.productionTip = false
 
@@ -17,6 +18,8 @@ var firebaseConfig = {
   }; 
   // Initialize Firebase 
   firebase.initializeApp(firebaseConfig); 
+
+Vue.use(requests)
 
 new Vue({
   router,

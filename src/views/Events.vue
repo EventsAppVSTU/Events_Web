@@ -149,9 +149,13 @@ export default {
     border: 0.5px solid #d7d7d7;
     margin: 2rem 0;
 }
+@media(min-width: 800px){
+  .event-card_img-container{
+    height: 400px ;
+  }
+}
 .event-card_img-container{
     width: 100%;
-    height: 400px;
     margin: auto;
     overflow: hidden;
     border-radius: 1.5rem;
@@ -201,6 +205,9 @@ p.event-card_description{
     border: 1px solid #ff004d;
 }
 @media(max-width:800px){
+    .event-card_img-container{
+      height: 200px;
+    }
     #sidebar-nav{
         width: 100%;
         z-index: 10;

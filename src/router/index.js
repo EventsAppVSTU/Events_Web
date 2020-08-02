@@ -16,6 +16,7 @@ import Login from '../views/Login.vue'
 // import { format } from 'core-js/fn/date'
 
 // import Store from '../store'
+import requests from '../requests'  //Запросы
 
 Vue.use(VueRouter)
 
@@ -149,8 +150,8 @@ const router = new VueRouter({
 router.beforeEach((to, from, next)=>{
   // var currentUser = '';
   // console.log(currentUser)
-  checkAuthorization().then(data=>{
-    const currentUser = data
+  requests.checkAuthorization().then(data=>{
+    const currentUser = data // currentUser = true/false
     
     console.log('cur user ', currentUser)
     
@@ -165,29 +166,29 @@ router.beforeEach((to, from, next)=>{
 })
 
 //Сделать checkAuthorization() глобальной функцией и App.vue при монтировании запускать ее, и из расчета возвращаемого (true/false) отображать или нет sidebar
-function checkAuthorization(){
-  console.log('cookie', localStorage.hash)
-  return new Promise(function(resolve, reject){
-    fetch('/api/auth', {
-      credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
-        method: 'POST',              // метод POST 
-        // body: JSON.stringify(),  // типа запрашиаемого документа
-        headers: new Headers({
-          'Content-Type': 'application/json',
-          'Authorization': localStorage.hash
-        })
-    }).then(res=>{
-      var data = res.json()
-      return data
-    }).then(data=>{
-      // this.$root.isAuth = data.isLog
-      resolve(data.isLog) 
+// function checkAuthorization(){
+//   console.log('cookie', localStorage.hash)
+//   return new Promise(function(resolve, reject){
+//     fetch('/api/auth', {
+//       credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
+//         method: 'POST',              // метод POST 
+//         // body: JSON.stringify(),  // типа запрашиаемого документа
+//         headers: new Headers({
+//           'Content-Type': 'application/json',
+//           'Authorization': localStorage.hash
+//         })
+//     }).then(res=>{
+//       var data = res.json()
+//       return data
+//     }).then(data=>{
+//       // this.$root.isAuth = data.isLog
+//       resolve(data.isLog) 
       
-      // this.isLog = true
-    }).catch(error=>{
-      reject(error)
-    })
-  })
-}
+//       // this.isLog = true
+//     }).catch(error=>{
+//       reject(error)
+//     })
+//   })
+// }
 
 export default router
