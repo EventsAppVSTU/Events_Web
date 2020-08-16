@@ -364,7 +364,7 @@ header{
     padding: .5rem 1.2rem;
 }
 
-@media(max-width:900px){
+@media(max-width:1024px){
     #sidebar-nav{
         padding: 5rem 0;
     }
@@ -373,7 +373,7 @@ header{
     }
 }
 
-@media(max-width:800px){
+@media(max-width:1024px){
     #sidebar-nav{
         width: 100%;
         z-index: 10;
