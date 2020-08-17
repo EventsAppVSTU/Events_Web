@@ -8,8 +8,18 @@
             <h2 class="logoText">Events App</h2>
           </div>
             <div class="header-right-side">
-              <button href="" class="btn btn-ea-red" id="menu-toggle" v-on:click="toggleMenu()">menu</button>
-              <button v-if="isLog" v-on:click="logOut()" class="textBtn" >Log out</button>
+              <button href="" class="btn " id="menu-toggle" v-on:click="toggleMenu()">
+                <svg class="feather">
+                    <use xlink:href="@/assets/feather-sprite.svg#menu"/>
+                </svg>
+                
+              </button>
+              <button v-if="isLog" v-on:click="logOut()" class="textBtn" >
+                <svg class="feather">
+                    <use xlink:href="@/assets/feather-sprite.svg#log-out"/>
+                </svg>
+                
+              </button>
             </div>
 
         </div>
@@ -114,7 +124,7 @@
                                  <router-link to="/chosenPerformances">
                                  <svg class="feather">
                                     <use xlink:href="@/assets/feather-sprite.svg#bookmark"/>
-                                </svg>
+                                 </svg>
                                  Chosen Performances</router-link>
                               </a>
                             </li>
@@ -148,7 +158,8 @@ export default {
       login: '',
       password: '', 
       displayError: false,
-      loginErrorMessage: '', 
+      loginErrorMessage: '',
+      menuButtonIcon: 'menu' 
     }
   },
   methods:{

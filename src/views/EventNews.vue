@@ -22,11 +22,16 @@
       <div class="card-body">
         <div class="news-header">
           <h2>{{newsCard.name}}</h2>
-          <button class="btn btn-outline-danger" @click="deleteNews(index)">delete</button>
+          <!-- <button class="btn btn-outline-danger" @click="deleteNews(index)">delete</button> -->
+          <button @click="deletePerformance(index)" class="card-delete-button">
+              <svg class="feather">
+                  <use xlink:href="@/assets/feather-sprite.svg#trash"/>
+              </svg>
+            </button>
         </div>
-        <p class="news-card_description" :class="{'short-text' : !(pressedButtonIndex == index)}">{{newsCard.description}}</p>
+        <p class="news-card_description" :class="{'short-text' : !(pressedButtonIndex === index)}">{{newsCard.description}}</p>
         <button v-if="newsCard.description.length > 55" class="news-button-more"  v-on:click="expandThisNews(index)">
-          More <svg class="feather" :class="{'rotate-news-arrow': pressedButtonIndex == index}">
+          More <svg class="feather" :class="{'rotate-news-arrow': pressedButtonIndex === index}">
                   <use xlink:href="@/assets/feather-sprite.svg#chevron-right"/>
               </svg>
         </button>
@@ -86,7 +91,7 @@ export default {
               })
         },
         expandThisNews(newsIndex){
-            if (this.pressedButtonIndex == '') {
+            if (this.pressedButtonIndex === '') {
               this.pressedButtonIndex = newsIndex;
             }
             else{
@@ -216,6 +221,14 @@ p.news-card_description{
 }
 .news-header>h2{
   flex-grow: 1;
+}
+.news-header button{
+  height: 2.5rem;
+}
+@media (max-width: 640px) {
+  p.news-card_description{
+    width: 100%;
+  }
 }
 
 </style>
