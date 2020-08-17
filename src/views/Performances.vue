@@ -19,6 +19,7 @@
                   </svg>
                   <input class="table-display-input table-event-name data-row_content-top_date" type="text" v-model="performance.datePerf" :disabled="isDisabled!==index">
                 </div>
+
                 <svg class="feather data-row-icons" >
                   <use xlink:href="@/assets/feather-sprite.svg#clock"/>
                 </svg>
@@ -418,6 +419,7 @@ export default {
 }
 .data-row_content-top_date{
   width: 6rem;
+  /* height: 100%; */
   margin-right: 1rem;
 }
 .data-row_content-top_time{
@@ -438,6 +440,10 @@ export default {
   }
   .data-row_content-top_date{
     margin-right: 7rem;
+  }
+  .data-row_content-top_performance-date{
+    width: 100%;
+    display: flex;
   }
 }
 
