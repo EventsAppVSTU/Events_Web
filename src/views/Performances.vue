@@ -428,6 +428,9 @@ export default {
 .data-row_content-top_speaker{
   width: calc(60% - 11.5rem);
 }
+.data-row_content-top_performance-date{
+  display: flex;
+}
 @media(max-width: 800px){
   .data-row_content{
     padding: .5rem 0;
@@ -443,7 +446,6 @@ export default {
   }
   .data-row_content-top_performance-date{
     width: 100%;
-    display: flex;
   }
 }
 
