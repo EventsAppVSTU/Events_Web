@@ -14,19 +14,13 @@
               <img v-if="$root.pictureUrl != ''" :src="$root.pictureUrl" alt="">
               <img v-else :src="currentEvent.image" alt="">
           </div>
-          <!-- <input type="text" name="image" class="input-photo-link" id="image" v-model="currentEvent.image" :disabled="isDisabled"> -->
+          
           <div class="upload-image-container" v-show="!isDisabled">
             <input v-if="$root.pictureUrl != ''" :src="$root.pictureUrl" type="text" name="image" id="image" class="input-photo-link" placeholder="Link to the Photo" v-model="$root.pictureUrl ">
             <input v-else :src="currentEvent.image" type="text" name="image" id="image" class="input-photo-link" placeholder="Link to the Photo" v-model="currentEvent.image ">
             <Upload/>
             
           </div>
-          <!-- <h3 class="current-event_decription-header">Описание</h3>
-          <textarea name="description" id="description" rows="2" @input="fixTextareaSize()" placeholder="Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias suscipit totam quis ab saepe dolore aliquid provident quas aliquam cupiditate nobis doloremque porro ut eum dolorem architecto unde, repudiandae corporis." :disabled="isDisabled"></textarea>
-          <h3 class="current-event_decription-header">Стоймость участия</h3>
-          <textarea name="" id="5" ref="textarea" rows="2" @input="fixTextareaSize()" placeholder="Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias suscipit totam quis ab saepe dolore aliquid provident quas aliquam cupiditate nobis doloremque porro ut eum dolorem architecto unde, repudiandae corporis." v-model="currentEvent.description" :disabled="isDisabled"></textarea>
-          <h3 class="current-event_decription-header">Место проведения</h3>
-          <textarea name="" id=""  rows="2" @input="fixTextareaSize()" placeholder="Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias suscipit totam quis ab saepe dolore aliquid provident quas aliquam cupiditate nobis doloremque porro ut eum dolorem architecto unde, repudiandae corporis." :disabled="isDisabled"></textarea> -->
 
           <h3 class="current-event_decription-header">Описание</h3>
           <textarea name="description" id="description"  @input="fixTextareaSize()" placeholder="Напишите здесь описание, важную и завлекающую информацию о мероприятии..." v-model="currentEvent.description" :disabled="isDisabled"></textarea>
@@ -72,24 +66,24 @@ export default {
     }
   },
   methods:{
-    getCurrentEvent(){
-      console.log('getting...')
-      fetch('/api/get-current-event-by-id?user=admin').then(res=>{
-            if(res.ok){
-                var data = res.json();
-                console.log('OK')
-                return data;
-            }
-            else{
-                console.log('er get rooms :(');
-                throw new Error ('er');
-            }
-        }).then(data=>{
-            console.log('current event data',data.data.objects[0])
-            this.currentEvent = data.data.objects[0];
-            this.$root.currentEvent = data.data.objects[0].id;
-        })
-    },
+    // getCurrentEvent(){
+    //   console.log('getting...')
+    //   fetch('/api/get-current-event-by-id?user=admin').then(res=>{
+    //         if(res.ok){
+    //             var data = res.json();
+    //             console.log('OK')
+    //             return data;
+    //         }
+    //         else{
+    //             console.log('er get rooms :(');
+    //             throw new Error ('er');
+    //         }
+    //     }).then(data=>{
+    //         console.log('current event data',data.data.objects[0])
+    //         this.currentEvent = data.data.objects[0];
+    //         this.$root.currentEvent = data.data.objects[0].id;
+    //     })
+    // },
     edit(){
       if (this.editBtn == 'Edit') {
         this.editBtn = 'Done'
@@ -130,24 +124,32 @@ export default {
       });
     },
     deleteCurrentEvent(){
-      var data = { id: Number } 
-      data.id = this.currentEvent.id
-       fetch('/api/delete-event-by-id', {
-          credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
-          method: 'POST',              // метод POST 
-          body: JSON.stringify(data),  // типа запрашиаемого документа
-          headers: new Headers({
-            'Content-Type': 'application/json'
-          }),
-        }).then(res=>{
-          console.log(res)
-          this.currentEvent.name = 'Событие не выбранно'
-        })
+      this.currentEventRequests.deleteCurrentEvent(this.currentEvent.id)
+      // var data = { id: Number } 
+      // data.id = this.currentEvent.id
+      //  fetch('/api/delete-event-by-id', {
+      //     credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
+      //     method: 'POST',              // метод POST 
+      //     body: JSON.stringify(data),  // типа запрашиаемого документа
+      //     headers: new Headers({
+      //       'Content-Type': 'application/json'
+      //     }),
+      //   }).then(res=>{
+      //     console.log(res)
+      //     this.currentEvent.name = 'Событие не выбранно'
+      //   })
     }
 
   },
   mounted(){
-    this.getCurrentEvent()
+    this.currentEventRequests.getCurrentEvent().then(event=>{
+      console.log('requested event', event)
+       this.currentEvent = event;
+       this.$root.currentEvent = event.id;
+    })
+
+
+    // this.getCurrentEvent()
     setTimeout(() => {
       this.fixTextareaSize()
     }, 500);

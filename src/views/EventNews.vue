@@ -2,8 +2,8 @@
  <div>
    <h2>News</h2>
       <div class="events-toolbar">
-      <input type="text" placeholder="Search News" v-model="searchString">
-      <router-link to="/createNews" class="btn btn-outline-danger btn-rounded">+ Create</router-link>
+        <input type="text" placeholder="Search News" v-model="searchString">
+         <router-link to="/createNews" class="btn btn-outline-danger btn-rounded">+ Create</router-link>
       </div>
 
 <div v-if="filteredNews == ''" class="message-empty-content">
@@ -120,37 +120,43 @@ export default {
             })
           }
         },
-        getCurrentEvent(){
-// из currentEvent
-      console.log('getting...')
-      return new Promise((resolve, reject)=>{
-        fetch('/api/get-current-event-by-id?user=admin').then(res=>{
-              if(res.ok){
-                  var data = res.json();
-                  console.log('OK')
-                  return data;
-              }
-              else{
-                  console.log('er get rooms :(');
-                  throw new Error ('er');
-              }
-          }).then(data=>{
-              console.log('current event data',data.data.objects[0])
-              this.currentEvent = data.data.objects[0];
-              this.$root.currentEvent = data.data.objects[0].id;
-              resolve('ok')
-          }).catch(error=>{
-            reject(error)
-          })
+//         getCurrentEvent(){
+// // из currentEvent
+          
+//       console.log('getting...')
+//       return new Promise((resolve, reject)=>{
+//         fetch('/api/get-current-event-by-id?user=admin').then(res=>{
+//               if(res.ok){
+//                   var data = res.json();
+//                   console.log('OK')
+//                   return data;
+//               }
+//               else{
+//                   console.log('er get rooms :(');
+//                   throw new Error ('er');
+//               }
+//           }).then(data=>{
+//               console.log('current event data',data.data.objects[0])
+//               this.currentEvent = data.data.objects[0];
+//               this.$root.currentEvent = data.data.objects[0].id;
+//               resolve('ok')
+//           }).catch(error=>{
+//             reject(error)
+//           })
 
-      })
-    }
+//       })
+//     }
   },
   mounted(){
-    // alert('i am ready')
-    this.getCurrentEvent().then(()=>{
-      this.loadNews();
+
+    this.currentEventRequests.getCurrentEvent().then(event=>{
+      this.currentEvent = event;
+      this.$root.currentEvent = event.id;
+      this.loadNews()
     })
+    // this.getCurrentEvent().then(()=>{
+    //   this.loadNews();
+    // })
   },
   computed: {
     filteredNews: function(){
@@ -177,15 +183,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-/* .news-sm-avatar{
-  width: 80px;
-  height: 80px;
-  background-color: #ff004d;
-  border-radius: 1.5rem;
-} */
-/* .card-body{
-  background-color: #999;
-} */
+
 p.news-card_description{
   width: 80%;
 }

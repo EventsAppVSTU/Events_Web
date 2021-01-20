@@ -9,10 +9,27 @@
     <div class="event-card" v-for="eventCard in filteredEvents" :key="eventCard.name">
       <hr class="event-card_hr">
       <div class="event-card_img-container" v-on:click="setCurrentEvent(eventCard.id)">
+        <div class="event-rating" >
+          <div class="stars" v-for="i in 5" :key="i">
+
+            <svg class="feather event-rating-star">
+              <use xlink:href="@/assets/feather-sprite.svg#star"/>
+            </svg>
+          </div>
+          
+        </div>
         <img :src="eventCard.image" alt="">
       </div>
-      <p class="event-card_category">{{eventCard.category_name}}</p>
-      <h2 class="event-card_header">{{eventCard.name}}</h2>
+      <p class="event-card_category">
+        <svg class="feather" v-if="eventCard.name=='Секретные разработки'">
+          <use xlink:href="@/assets/feather-sprite.svg#lock"/>
+        </svg>
+        {{eventCard.category_name}}
+      </p>
+      <h2 class="event-card_header">{{eventCard.name}}</h2> 
+      <span>
+        
+      </span>
       <p class="event-card_description">{{eventCard.description}}</p>
     </div>
       </div>
@@ -164,11 +181,21 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 .event-card_img-container>img{
     object-fit: cover;
     width: 100%;
     height: 100%;
+}
+.event-rating{
+  display: flex;
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+}
+.event-rating-star{
+  stroke: white;
 }
 .event-card_img-container>input{
     outline:0;

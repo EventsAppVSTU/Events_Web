@@ -4,6 +4,7 @@ import router from './router'
 import firebase from 'firebase'
 import Store from './store'
 import requests from './requests'  //Запросы
+import currentEventRequests from './requests/currentEventRequests'
 
 Vue.config.productionTip = false
 
@@ -20,6 +21,7 @@ var firebaseConfig = {
   firebase.initializeApp(firebaseConfig); 
 
 Vue.use(requests)
+Vue.use(currentEventRequests)
 
 new Vue({
   router,

@@ -12,6 +12,7 @@ import EventNews from '../views/EventNews.vue'
 import CreateNews from '../views/CreateNews.vue'
 import ChosenEvents from '../views/ChosenEvents.vue'
 import ChosenPerformances from '../views/ChosenPerformances.vue'
+import PrivateEventAccept from '../views/PrivateEventAccept.vue'
 import Login from '../views/Login.vue'
 // import { format } from 'core-js/fn/date'
 
@@ -129,6 +130,14 @@ Vue.use(VueRouter)
     path: '/chosenPerformances',
     name: 'ChosenPerformances',
     component: ChosenPerformances,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/privateEventAccept',
+    name: 'PrivatEventAccept',
+    component: PrivateEventAccept,
     meta: {
       requiresAuth: true
     }

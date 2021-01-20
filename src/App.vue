@@ -83,6 +83,15 @@
                             </li>
                             <li class="nav-item">
                               <a class="nav-link" href="#">
+                                 <router-link to="/privateEventAccept">
+                                 <svg class="feather">
+                                    <use xlink:href="@/assets/feather-sprite.svg#lock"/>
+                                 </svg>
+                                 Private Event </router-link>
+                              </a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" href="#">
                                 <span data-feather="users"></span>
                                  <router-link to="/users">
                                  <svg class="feather">

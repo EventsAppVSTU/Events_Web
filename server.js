@@ -741,12 +741,9 @@ app.post('/api/sign-in', urlencodedParser, (req,res)=>{
         }
     }).catch(error=>{
         console.log(error)
-    })
-   
-
-    
-        
+    }) 
 })
+
 app.post('/api/auth', urlencodedParser, (req, res)=>{
     console.log('AUTH', req.headers.authorization)
     if(req.headers.authorization == '111111_2'){
