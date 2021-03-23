@@ -17,7 +17,8 @@ import {acceptUserOnEvent, declineUserRequest} from './controllers/privateEvent.
 export default (app)=>{
     //___________routes__________
 app.get('/', urlencodedParser, (req, res,)=>{ //выдает страницу в браузер
-    res.sendFile(__dirname + '/index.html/')
+    res.sendFile('/dist/index.html')
+    // __dirname + '/index.html/'
 })
 app.get('/api', urlencodedParser, (req, res,)=>{ //выдает страницу в браузер
     // res.send('hahaahahahh')

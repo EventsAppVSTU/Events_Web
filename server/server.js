@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 // const urlencodedParser = urlencoded({extended: false}) //включение парсера
 console.log("hello!!!!! how are you ?))))")
 
-app.use(express.static('../client/dist'));
+app.use(express.static('dist/'));
 
 import routes from './routing.js';
 routes(app)
