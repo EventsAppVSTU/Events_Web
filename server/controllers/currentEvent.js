@@ -4,7 +4,7 @@ import fetch from 'node-fetch';
 
 function getCurrentEvent(req, res){
     console.log('🧑‍💻 user', req.query.user)
-    fetch('http://yaem.online/robo/users/userCredentals.php?id=1', {
+    fetch('http://yaem.store/robo/users/userCredentals.php?id=1', {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json',
@@ -18,7 +18,7 @@ function getCurrentEvent(req, res){
     }).then(data=>{
         console.log('this is data: ', data);
         console.log('current event: ', data.data.objects[0].current_event)
-        fetch(`http://yaem.online/robo/events/events.php?id=${data.data.objects[0].current_event}`, {
+        fetch(`http://yaem.store/robo/events/events.php?id=${data.data.objects[0].current_event}`, {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ function setCurrentEvent(req, res){
         password: '',
     }
 
-    fetch('http://yaem.online/robo/users/userCredentals.php?id=1', {
+    fetch('http://yaem.store/robo/users/userCredentals.php?id=1', {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ function setCurrentEvent(req, res){
         dataToUpdate.login = data.data.objects[0].login;
         dataToUpdate.password = data.data.objects[0].password;
 
-        fetch('http://yaem.online/robo/users/userCredentals.php', {
+        fetch('http://yaem.store/robo/users/userCredentals.php', {
         method: 'PUT', // метод POST 
         headers: new Headers({
             'Content-Type': 'application/x-www-form-urlencoded',

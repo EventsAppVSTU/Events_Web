@@ -4,14 +4,14 @@ import {getRequest, postRequest, putReguest, deleteRequest} from '../helpers/req
 
 function getOrganizations(req, res){
     console.log('😅 getting organizations')
-    getRequest('http://yaem.online/robo/events/organizations.php').then(data=>{
+    getRequest('http://yaem.store/robo/events/organizations.php').then(data=>{
         console.log(data)
         res.json(data)
     })
 }
 
 function createOrganization(req, res){
-    postRequest('http://yaem.online/robo/events/organizations.php', req.body).then(response=>{
+    postRequest('http://yaem.store/robo/events/organizations.php', req.body).then(response=>{
         console.log(response)
         res.json(response);
     })
@@ -19,14 +19,14 @@ function createOrganization(req, res){
 
 function updateOrganization(req, res){
     console.log('i will create organization', req.body)
-    putReguest('http://yaem.online/robo/events/organizations.php', req.body).then(response=>{
+    putReguest('http://yaem.store/robo/events/organizations.php', req.body).then(response=>{
         res.json(response);
     })
 }
 
 function deleteOrganization(req, res){
     console.log('😅 getting organizations')
-    deleteRequest(`http://yaem.online/robo/events/organizations.php?id=${req.query.id}`).then(response=>{
+    deleteRequest(`http://yaem.store/robo/events/organizations.php?id=${req.query.id}`).then(response=>{
         console.log(response)
         res.json(response);
     })

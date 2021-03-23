@@ -160,8 +160,7 @@ router.beforeEach((to, from, next)=>{
   // var currentUser = '';
   // console.log(currentUser)
   requests.checkAuthorization().then(data=>{
-    const currentUser = data // currentUser = true/false
-    
+    var currentUser = data // currentUser = true/false
     console.log('cur user ', currentUser)
     
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);

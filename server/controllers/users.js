@@ -4,7 +4,7 @@ import fetch from 'node-fetch';
 
 function getUsers(req, res){
     console.log('getting users........')
-    fetch('http://yaem.online/robo/users/userCredentals.php', {
+    fetch('http://yaem.store/robo/users/userCredentals.php', {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ function createUser(req, res){
     
     console.log('this data I will send: ', data);
 
-    fetch('http://yaem.online/robo/users/userCredentals.php', {
+    fetch('http://yaem.store/robo/users/userCredentals.php', {
         method: 'POST', // метод POST 
         headers: new Headers({
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -64,7 +64,7 @@ function updateUser(req, res){
     
     console.log('this data I will send: ', data);
 
-    fetch('http://yaem.online/robo/users/userCredentals.php', {
+    fetch('http://yaem.store/robo/users/userCredentals.php', {
         method: 'PUT', // метод POST 
         headers: new Headers({
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -83,7 +83,7 @@ function updateUser(req, res){
 function deleteUser(req, res){
     console.log('getting users........');
     console.log('user id = ', req.query.id);
-    fetch(`http://yaem.online/robo/users/userCredentals.php?id=${req.query.id}`, {
+    fetch(`http://yaem.store/robo/users/userCredentals.php?id=${req.query.id}`, {
         method: 'DELETE',
         headers: new Headers( { 
             'Content-Type': 'application/x-www-form-urlencoded',

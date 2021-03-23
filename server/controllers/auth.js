@@ -7,7 +7,7 @@ function signIn(req, res){
     var userLogin = '';
     var userPassword = '';
     //найти юзера по логину (так как пока нет такого фильтра, то искать по id.)
-    fetch('http://yaem.online/robo/users/userCredentals.php?id=1', {
+    fetch('http://yaem.store/robo/users/userCredentals.php?id=1', {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json',

@@ -3,7 +3,7 @@ bodyParser.urlencoded({extended: false})
 import fetch from 'node-fetch';
 
 function getPerformances(req, res){
-    fetch(`http://yaem.online/robo/performances/performances.php?event_id=${req.query.event}`, {
+    fetch(`http://yaem.store/robo/performances/performances.php?event_id=${req.query.event}`, {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json',
@@ -20,7 +20,7 @@ function getPerformances(req, res){
 
 function createPerformance(req, res){
     console.log('Sending: ', req.body)
-    fetch(`http://yaem.online/robo/performances/performances.php`, {
+    fetch(`http://yaem.store/robo/performances/performances.php`, {
         method: 'POST',
         headers: { 
             'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ function createPerformance(req, res){
 }
 function updatePerformance(req, res){
     console.log('Sending upd: ', req.body)
-    fetch(`http://yaem.online/robo/performances/performances.php`, {
+    fetch(`http://yaem.store/robo/performances/performances.php`, {
     method: 'PUT',
         headers: { 
             'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ function updatePerformance(req, res){
 
 function deletePerformance(req, res){
     console.log('will delete', req.body.id)
-    fetch(`http://yaem.online/robo/performances/performances.php?id=${req.body.id}`, {
+    fetch(`http://yaem.store/robo/performances/performances.php?id=${req.body.id}`, {
     method: 'DELETE',
         headers: { 
             'Content-Type': 'application/json',

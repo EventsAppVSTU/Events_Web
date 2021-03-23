@@ -5,7 +5,7 @@ import {getRequest, postRequest, putReguest, deleteRequest} from '../helpers/req
 
 function getEventNews(req, res){
     console.log('😅 getting events news ', req.query.event_id)
-    getRequest(`http://yaem.online/robo/events/eventNews.php?event_id=${req.query.event_id}`).then(data=>{
+    getRequest(`http://yaem.store/robo/events/eventNews.php?event_id=${req.query.event_id}`).then(data=>{
         console.log(data)
         res.json(data)
     })
@@ -22,7 +22,7 @@ function createNews(req, res){
     
     console.log('this data I will send: ', data);
 
-    fetch('http://yaem.online/robo/events/eventNews.php', {
+    fetch('http://yaem.store/robo/events/eventNews.php', {
         method: 'POST', // метод POST 
         headers: new Headers({
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -44,7 +44,7 @@ function deleteEventNews(req, res){
         //удалить текущие событие у админа
     //Удалить событие
         console.log('will delete')
-        fetch(`http://yaem.online/robo/events/eventNews.php?id=${req.body.id}`, {
+        fetch(`http://yaem.store/robo/events/eventNews.php?id=${req.body.id}`, {
             method: 'DELETE',
             headers: { 
                 'Content-Type': 'application/x-www-form-urlencoded',

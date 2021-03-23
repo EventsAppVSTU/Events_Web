@@ -4,7 +4,7 @@ import {getRequest, postRequest, putReguest, deleteRequest} from '../helpers/req
 
 function getEvets(req, res){
     console.log('😅 getting events')
-    getRequest('http://yaem.online/robo/events/eventsInfo.php').then(data=>{
+    getRequest('http://yaem.store/robo/events/eventsInfo.php').then(data=>{
         console.log(data)
         res.json(data)
     })
@@ -24,7 +24,7 @@ function createNewEvent(req, res){
     
     console.log('this data I will send: ', data);
 
-    postRequest('http://yaem.online/robo/events/events.php', data).then(response=>{
+    postRequest('http://yaem.store/robo/events/events.php', data).then(response=>{
         console.log(data)
         res.json(response);
     })
@@ -45,7 +45,7 @@ function updateEvent(req, res){
     }
     
     console.log('this data I will send: ', data);
-    putReguest('http://yaem.online/robo/events/events.php', data).then(response=>{
+    putReguest('http://yaem.store/robo/events/events.php', data).then(response=>{
         res.json(response);
     })
 }
@@ -57,7 +57,7 @@ function deleteEvent(req, res){
         //удалить текущие событие у админа
         //Удалить событие
         console.log('will delete')
-        deleteRequest(`http://yaem.online/robo/events/events.php?id=${req.body.id}`).then(response=>{
+        deleteRequest(`http://yaem.store/robo/events/events.php?id=${req.body.id}`).then(response=>{
             console.log(data)
             res.json(response);
         })

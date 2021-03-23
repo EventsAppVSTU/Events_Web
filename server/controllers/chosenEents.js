@@ -5,7 +5,7 @@ import fetch from 'node-fetch';
 function getChosenEvents(req, res){
     console.log('😅 getting organizations')
     
-    fetch(' http://yaem.online/robo/events/choosenEvents.php', {
+    fetch(' http://yaem.store/robo/events/choosenEvents.php', {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json',

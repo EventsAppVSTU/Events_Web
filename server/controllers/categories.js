@@ -4,7 +4,7 @@ import fetch from 'node-fetch';
 
 function getCategories(req, res){
     console.log('😅 getting categories')
-    fetch('http://yaem.online/robo/events/eventsCategories.php', {
+    fetch('http://yaem.store/robo/events/eventsCategories.php', {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ function getCategories(req, res){
 
 function createCategory(req, res){
     console.log('i will create category', req.body)
-        fetch('http://yaem.online/robo/events/eventsCategories.php',{
+        fetch('http://yaem.store/robo/events/eventsCategories.php',{
             method: 'POST',
             headers: new Headers({
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -41,7 +41,7 @@ function createCategory(req, res){
 
 function updateCategory(req, res){
     console.log('i will create category', req.body)
-    fetch('http://yaem.online/robo/events/eventsCategories.php',{
+    fetch('http://yaem.store/robo/events/eventsCategories.php',{
         method: 'PUT',
         headers: new Headers({
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -59,7 +59,7 @@ function updateCategory(req, res){
 
 function deleteCategory(req, res){
     console.log('😅 getting category')
-    fetch(`http://yaem.online/robo/events/eventsCategories.php?id=${req.query.id}`, {
+    fetch(`http://yaem.store/robo/events/eventsCategories.php?id=${req.query.id}`, {
         method: 'DELETE',
         headers: { 
             'Content-Type': 'application/json',
