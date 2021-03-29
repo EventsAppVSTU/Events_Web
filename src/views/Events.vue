@@ -104,7 +104,7 @@ export default {
             return require('../assets/' + pic);
           },
           setCurrentEvent(eventID){
-            alert('событие установленно')
+            
             fetch(`/api/set-current-event-by-id?user=admin&event=${eventID}`, {
             headers : { 
                 'Content-Type': 'application/json',
@@ -124,7 +124,12 @@ export default {
                   }
               }).then(data=>{
                   console.log(data);
-                  // this.$router.push('/currentEvent')
+                  this.$eventBus.$emit('reloadApp')
+                  // alert('событие установленно')
+                  setTimeout(() => {
+                    
+                    this.$router.push('/currentEvent')
+                  }, 500);
 
               })
           }

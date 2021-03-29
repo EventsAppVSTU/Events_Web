@@ -25,9 +25,12 @@
         </div>
     </header>
 
+    <Loader v-show="loading == true" />
+
 <!-- Для отображения формы входа -->
   <router-view v-if="!isLog" @checkAuthAgain="checkAuth()"/>
    <div v-show="isLog">
+               
             <div class="container-fluid">
             <div class="row">
                 <div class="col-md-2">
@@ -38,9 +41,31 @@
                               <span class="nav-link">
                                 <router-link to="/events">
                                 <svg class="feather">
+                                    <use xlink:href="@/assets/feather-sprite.svg#compass"/>
+                                </svg>
+                                События</router-link>
+                              </span>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" href="#">
+                                 <router-link to="/chosenEvents">
+                                 <svg class="feather">
+                                    <use xlink:href="@/assets/feather-sprite.svg#book"/>
+                                </svg>
+                                 Выбранные события</router-link>
+                              </a>
+                            </li>
+                            <li>
+                              <hr>
+                            </li>
+                            <li class="nav-item">
+                              <span class="nav-link currentEventMenu">
+                                <router-link to="/currentEvent">
+                                <svg class="feather">
                                     <use xlink:href="@/assets/feather-sprite.svg#home"/>
                                 </svg>
-                                Events</router-link>
+                                {{currentEvent.name}}
+                                </router-link>
                               </span>
                             </li>
                             <li class="nav-item">
@@ -50,10 +75,10 @@
                                 <svg class="feather">
                                     <use xlink:href="@/assets/feather-sprite.svg#layout"/>
                                 </svg>
-                                News</router-link>
+                                Новости</router-link>
                               </span>
                             </li>
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                               <span class="nav-link">
                                 <router-link to="/home">
                                 <svg class="feather">
@@ -61,7 +86,7 @@
                                 </svg>
                                 Home</router-link>
                               </span>
-                            </li>
+                            </li> -->
                             <li class="nav-item">
                               <a class="nav-link" href="#">
                                 
@@ -69,63 +94,7 @@
                                 <svg class="feather">
                                     <use xlink:href="@/assets/feather-sprite.svg#calendar"/>
                                 </svg>
-                                Performances</router-link>
-                              </a>
-                            </li>
-                            <li class="nav-item">
-                              <span class="nav-link">
-                                <router-link to="/currentEvent">
-                                <svg class="feather">
-                                    <use xlink:href="@/assets/feather-sprite.svg#file-text"/>
-                                </svg>
-                                Current Event</router-link>
-                              </span>
-                            </li>
-                            <li class="nav-item">
-                              <a class="nav-link" href="#">
-                                 <router-link to="/privateEventAccept">
-                                 <svg class="feather">
-                                    <use xlink:href="@/assets/feather-sprite.svg#lock"/>
-                                 </svg>
-                                 Private Event </router-link>
-                              </a>
-                            </li>
-                            <li class="nav-item">
-                              <a class="nav-link" href="#">
-                                <span data-feather="users"></span>
-                                 <router-link to="/users">
-                                 <svg class="feather">
-                                    <use xlink:href="@/assets/feather-sprite.svg#users"/>
-                                </svg>
-                                 Users</router-link>
-                              </a>
-                            </li>
-                            <li class="nav-item">
-                              <a class="nav-link" href="#">
-                                <router-link to="/organizations">
-                                  <svg class="feather">
-                                      <use xlink:href="@/assets/feather-sprite.svg#aperture"/>
-                                  </svg>
-                                Organizations</router-link>
-                              </a>
-                            </li>
-                            <li class="nav-item">
-                              <a class="nav-link" href="#">
-                                <span data-feather="users"></span>
-                                 <router-link to="/eventsCategories">
-                                 <svg class="feather">
-                                    <use xlink:href="@/assets/feather-sprite.svg#bar-chart-2"/>
-                                </svg>
-                                 Categories</router-link>
-                              </a>
-                            </li>
-                            <li class="nav-item">
-                              <a class="nav-link" href="#">
-                                 <router-link to="/chosenEvents">
-                                 <svg class="feather">
-                                    <use xlink:href="@/assets/feather-sprite.svg#book"/>
-                                </svg>
-                                 Chosen Events</router-link>
+                                Расписание</router-link>
                               </a>
                             </li>
                             <li class="nav-item">
@@ -134,9 +103,53 @@
                                  <svg class="feather">
                                     <use xlink:href="@/assets/feather-sprite.svg#bookmark"/>
                                  </svg>
-                                 Chosen Performances</router-link>
+                                 Выбранные секции</router-link>
                               </a>
                             </li>
+                            
+                            <li class="nav-item">
+                              <a class="nav-link" href="#">
+                                 <router-link to="/privateEventAccept">
+                                 <svg class="feather">
+                                    <use xlink:href="@/assets/feather-sprite.svg#lock"/>
+                                 </svg>
+                                 Приватные события</router-link>
+                              </a>
+                            </li>
+                            <li>
+                              <hr>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" href="#">
+                                <span data-feather="users"></span>
+                                 <router-link to="/users">
+                                 <svg class="feather">
+                                    <use xlink:href="@/assets/feather-sprite.svg#users"/>
+                                </svg>
+                                 Пользователи</router-link>
+                              </a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" href="#">
+                                <router-link to="/organizations">
+                                  <svg class="feather">
+                                      <use xlink:href="@/assets/feather-sprite.svg#aperture"/>
+                                  </svg>
+                                Организации</router-link>
+                              </a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" href="#">
+                                <span data-feather="users"></span>
+                                 <router-link to="/eventsCategories">
+                                 <svg class="feather">
+                                    <use xlink:href="@/assets/feather-sprite.svg#grid"/>
+                                </svg>
+                                 Категории</router-link>
+                              </a>
+                            </li>
+                            
+                            
                           </ul>
                           
                         
@@ -157,10 +170,15 @@
 </template>
 
 <script>
+import Loader from './components/Loader'
+
 export default {
   
   
   name: 'App',
+  components: {
+    Loader
+  },
   data: function(){
     return {
       isLog: '',
@@ -168,10 +186,18 @@ export default {
       password: '', 
       displayError: false,
       loginErrorMessage: '',
-      menuButtonIcon: 'menu' 
+      menuButtonIcon: 'menu',
+      currentEvent: '',
+      loading: false
     }
   },
   methods:{
+    loadPage(){
+      this.currentEventRequests.getCurrentEvent().then(event=>{
+      console.log('requested event', event)
+      this.currentEvent = event;
+    })
+    },
     checkAuth(){
         this.requests.checkAuthorization().then(data=>{
           console.log(data)
@@ -194,8 +220,22 @@ export default {
      })
     }
   },
+  created(){
+    this.$eventBus.$on('reloadApp', ()=>{
+      // alert('reloading...')
+      this.loading = true
+      setTimeout(() => {
+        this.loadPage()
+        this.loading = false
+      }, 1000);
+    })
+  },
   mounted(){
      this.checkAuth()
+
+    //узнать выбранное событие
+    this.loadPage()
+
     //если не пустой, то можно
     // if(localStorage.hash = ''){
     //   this.isLog = false
@@ -208,44 +248,31 @@ export default {
 </script>
 
 <style>
-/* #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-} */
-
-/* #nav {
-  padding: 30px;
+.loader-conteiner{
+  position: absolute;
+  background: #111111c5;
+  height: 100%;
+  width: 100%;
+  z-index: 11;
+  backdrop-filter: blur(12px);
 }
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+.loader{
+  position: absolute;
+  top: 50vh;
+  left: 50vw;
+  z-index: 1;
 }
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-} */
-/* @media(prefers-color-scheme: light){
-  body{
-    background-color: white;
-    color: black;
-  }
+.currentEventMenu{
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 210px;
 }
-@media(prefers-color-scheme: dark){
-  body{
-    background-color:black;
-    color: white;
-  }
-} */
 
 .message-empty-content{
   padding: 2rem;
   text-align: center;
   color: #676767;
-  /* font-size: 1.2rem; */
 }
 .text-button{
   font-weight: 600;
@@ -273,7 +300,6 @@ header{
     position: fixed;
     width: 100%;
     z-index: 11111;
-    /* display: flex; */
 }
 .header-row{
   display: flex;
@@ -300,10 +326,10 @@ header{
   display: flex;
   flex-grow: 1;
 }
+
 /* sign in */
 .signInBlock{
   padding: 7rem;
-  /* background: #ff004d; */
 }
 .signInBlock h2{
   text-align: center;
@@ -312,12 +338,10 @@ header{
   padding: 3rem;
   width: 60%;
   margin: auto;
-  /* background: #999; */
   border-radius: 1.2rem;
   border: 1px solid rgb(218, 218, 218);
-  /* box-shadow: 5px 5px 50px rgba(51, 51, 51, 0.112), 5px 5px 10px rgba(51, 51, 51, 0.112); */
 }
-/*  */
+
 .feedback{
   color: red;
 }

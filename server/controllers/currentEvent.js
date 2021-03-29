@@ -48,6 +48,11 @@ function setCurrentEvent(req, res){
         current_event: req.query.event,
         login: '',
         password: '',
+
+        organization_verify: '', //new
+        phone: '', //new
+        web_link: '', //new
+        bio: '' //new
     }
 
     fetch('http://yaem.store/robo/users/userCredentals.php?id=1', {
@@ -70,6 +75,11 @@ function setCurrentEvent(req, res){
         dataToUpdate.current_event = req.query.event;
         dataToUpdate.login = data.data.objects[0].login;
         dataToUpdate.password = data.data.objects[0].password;
+
+        dataToUpdate.organization_verify = data.data.objects[0].organization_verify; //new
+        dataToUpdate.phone = data.data.objects[0].phone; //new
+        dataToUpdate.web_link = data.data.objects[0].web_link; //new
+        dataToUpdate.bio = data.data.objects[0].bio; //new
 
         fetch('http://yaem.store/robo/users/userCredentals.php', {
         method: 'PUT', // метод POST 

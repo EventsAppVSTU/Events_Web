@@ -32,6 +32,7 @@
 //Для входа в систему
 // login: login111
 // password: 111111_2
+import {signIn} from '../requests/authRequests'
 
 export default {
   name: 'Login',
@@ -58,42 +59,52 @@ export default {
         //поместить токен в localStorage
         //сделать редирект на главную this.$router.replace('home')
        var data = {
-         login: this.login,
-        password: this.password
-      }
-      // отправить на сервер
-      fetch('/api/sign-in',{
-        credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
-        method: 'POST',              // метод POST 
-        body: JSON.stringify(data),  // типа запрашиаемого документа
-        headers: new Headers({
-          'Content-Type': 'application/json'
+                    login: this.login,
+                    password: this.password
+                  }
+
+        signIn(data).then(res =>{
+          console.log('NEW sign in: ', res)
+        }).catch(err=>{
+          console.log('Cannot login ', err)
+          this.displayError = true
+          this.loginErrorMessage = 'Логин или пароль неверный'
         })
-      }).then(res=>{
-        var data = res.json()
-        return data
-      }).then(data=>{
-        console.log(data)
-        if(data.hash == 'No user found'){
-          this.displayError = true
-          this.loginErrorMessage = 'No user found'
-        }
-        else if(data.hash == ''){
-          this.displayError = true
-          this.loginErrorMessage = 'Incorrect'
-        }
-        else{
-          //Все хорошо, делаем редирект
-          // this.isLog = true
-          localStorage.hash = data.hash
-          // this.$root.isAuth = true
-          console.log('cppkie', localStorage)
-          // this.checkAutorization;
-          console.log(this.$route.params.nextUrl)
-          this.$router.replace('events')
-          this.$emit('checkAuthAgain');
+        // отправить на сервер
+        fetch('/api/sign-in',{
+          credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
+          method: 'POST',              // метод POST 
+          body: JSON.stringify(data),  // типа запрашиаемого документа
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          })
+        }).then(res=>{
+          var data = res.json()
+          return data
+        }).then(data=>{
+          console.log(data)
+          if(data.hash == 'No user found'){
+            this.displayError = true
+            this.loginErrorMessage = 'No user found'
           }
-      })
+          else if(data.hash == ''){
+            this.displayError = true
+            this.loginErrorMessage = 'Incorrect'
+          }
+          else{
+            //Все хорошо, делаем редирект
+            // this.isLog = true
+            localStorage.hash = data.hash
+            // this.$root.isAuth = true
+            console.log('cppkie', localStorage)
+            // this.checkAutorization;
+            console.log(this.$route.params.nextUrl)
+            this.$router.replace('events')
+            this.$emit('checkAuthAgain');
+            }
+        })
+
+
       }
   },
   mounted(){

@@ -7,6 +7,7 @@ import requests from './requests'  //Запросы
 import currentEventRequests from './requests/currentEventRequests'
 
 Vue.config.productionTip = false
+Vue.prototype.$eventBus = new Vue(); // Global event bu
 
 var firebaseConfig = { 
   apiKey: "AIzaSyCEfISXS_X6hcw6HWesOZePDswmh5ppaf0", 

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+// import Home from '../views/Home.vue'
 import Events from '../views/Events.vue'
 import Performances from '../views/Performances.vue'
 import CreateEvent  from '../views/CreateEvent.vue'
@@ -78,14 +78,14 @@ Vue.use(VueRouter)
       requiresAuth: true
     }
   },
-  {
-    path: '/home',
-    name: 'Home',
-    component: Home,
-    meta: {
-      requiresAuth: true
-    }
-  },
+  // {
+  //   path: '/home',
+  //   name: 'Home',
+  //   component: Home,
+  //   meta: {
+  //     requiresAuth: true
+  //   }
+  // },
   {
     path: '/performances',
     name: 'Performances',
@@ -153,7 +153,10 @@ Vue.use(VueRouter)
 ]
 
 const router = new VueRouter({
-  routes
+  routes,
+  scrollBehavior () {
+    return { x: 0, y: 0 }
+  }
 })
 
 router.beforeEach((to, from, next)=>{
