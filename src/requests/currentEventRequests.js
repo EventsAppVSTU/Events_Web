@@ -1,11 +1,14 @@
-
-
+//
+// ------НЕ ИСПОЛЬЗУЕТСЯ----
+//
 const currentEventRequests = {
     getCurrentEvent(){
         // из currentEvent
-        console.log('getting...')
+        console.log('getting...', localStorage.userId)
         return new Promise((resolve, reject)=>{
-        fetch('/api/get-current-event-by-id?user=admin').then(res=>{
+        fetch(`/api/get-current-event-by-id?userId=${localStorage.userId}`, {
+          headers: {'Token': localStorage.hash}
+        }).then(res=>{
                 if(res.ok){
                     var data = res.json();
                     console.log('OK')
@@ -32,7 +35,8 @@ const currentEventRequests = {
             method: 'POST',              // метод POST 
             body: JSON.stringify(data),  // типа запрашиаемого документа
             headers: new Headers({
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'Token': localStorage.hash
             }),
           }).then(res=>{
             console.log(res)

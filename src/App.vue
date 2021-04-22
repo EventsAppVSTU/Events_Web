@@ -14,7 +14,7 @@
                 </svg>
                 
               </button>
-              <button v-if="isLog" v-on:click="logOut()" class="textBtn" >
+              <button v-if="currentEvent.id != undefined" v-on:click="logOut()" class="textBtn" >
                 <svg class="feather">
                     <use xlink:href="@/assets/feather-sprite.svg#log-out"/>
                 </svg>
@@ -28,17 +28,22 @@
     <Loader v-show="loading == true" />
 
 <!-- Для отображения формы входа -->
-  <router-view v-if="!isLog" @checkAuthAgain="checkAuth()"/>
-   <div v-show="isLog">
+<!-- @checkAuthAgain="checkAuth()" -->
+<!-- currentEvent.id == undefined -->
+  <router-view v-if="userAdmin == ''|| userAdmin == undefined" @checkAuthAgain="reloadPage()" />
+  <!-- v-show="currentEvent.id != undefined" -->
+   <div v-if="userAdmin != ''">
                
             <div class="container-fluid">
             <div class="row">
-                <div class="col-md-2">
+                <div class="col-md-2" >
                     <ul id="sidebar-nav" class="s-hidden">
                         
                         <ul class="nav flex-column">
+                          <div v-if="userRole != 2">
+
                             <li class="nav-item">
-                              <span class="nav-link">
+                              <span class="nav-link" >
                                 <router-link to="/events">
                                 <svg class="feather">
                                     <use xlink:href="@/assets/feather-sprite.svg#compass"/>
@@ -78,15 +83,6 @@
                                 Новости</router-link>
                               </span>
                             </li>
-                            <!-- <li class="nav-item">
-                              <span class="nav-link">
-                                <router-link to="/home">
-                                <svg class="feather">
-                                    <use xlink:href="@/assets/feather-sprite.svg#feather"/>
-                                </svg>
-                                Home</router-link>
-                              </span>
-                            </li> -->
                             <li class="nav-item">
                               <a class="nav-link" href="#">
                                 
@@ -106,19 +102,21 @@
                                  Выбранные секции</router-link>
                               </a>
                             </li>
-                            
-                            <li class="nav-item">
+                            <li class="nav-item" v-if="currentEvent.private == 1">
                               <a class="nav-link" href="#">
                                  <router-link to="/privateEventAccept">
                                  <svg class="feather">
                                     <use xlink:href="@/assets/feather-sprite.svg#lock"/>
                                  </svg>
-                                 Приватные события</router-link>
+                                 Заявки на событие</router-link>
                               </a>
                             </li>
                             <li>
                               <hr>
                             </li>
+                          </div>
+                            
+                            
                             <li class="nav-item">
                               <a class="nav-link" href="#">
                                 <span data-feather="users"></span>
@@ -129,25 +127,28 @@
                                  Пользователи</router-link>
                               </a>
                             </li>
-                            <li class="nav-item">
-                              <a class="nav-link" href="#">
-                                <router-link to="/organizations">
+
+                            <div v-if="userRole == 2">
+                              <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                  <router-link to="/organizations">
+                                    <svg class="feather">
+                                        <use xlink:href="@/assets/feather-sprite.svg#aperture"/>
+                                    </svg>
+                                  Организации</router-link>
+                                </a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                  <span data-feather="users"></span>
+                                  <router-link to="/eventsCategories">
                                   <svg class="feather">
-                                      <use xlink:href="@/assets/feather-sprite.svg#aperture"/>
+                                      <use xlink:href="@/assets/feather-sprite.svg#grid"/>
                                   </svg>
-                                Организации</router-link>
-                              </a>
-                            </li>
-                            <li class="nav-item">
-                              <a class="nav-link" href="#">
-                                <span data-feather="users"></span>
-                                 <router-link to="/eventsCategories">
-                                 <svg class="feather">
-                                    <use xlink:href="@/assets/feather-sprite.svg#grid"/>
-                                </svg>
-                                 Категории</router-link>
-                              </a>
-                            </li>
+                                  Категории</router-link>
+                                </a>
+                              </li>
+                            </div>
                             
                             
                           </ul>
@@ -171,6 +172,8 @@
 
 <script>
 import Loader from './components/Loader'
+import {getCurrentEvent} from './requests/currentEvent'
+import {getUserById} from './requests/users'
 
 export default {
   
@@ -188,21 +191,47 @@ export default {
       loginErrorMessage: '',
       menuButtonIcon: 'menu',
       currentEvent: '',
-      loading: false
+      loading: false,
+      userRole: '',
+      userAdmin: ''
     }
   },
   methods:{
     loadPage(){
-      this.currentEventRequests.getCurrentEvent().then(event=>{
-      console.log('requested event', event)
-      this.currentEvent = event;
-    })
-    },
-    checkAuth(){
-        this.requests.checkAuthorization().then(data=>{
-          console.log(data)
-          this.isLog = data
+      this.userRole = localStorage.userRole
+      // if(this.userRole != undefined){
+        console.log('user id', localStorage.userId)
+        getUserById(localStorage.userId).then(data=>{
+          this.userAdmin = data.data.objects[0]
         })
+        getCurrentEvent().then(data=>{
+            console.log('requested event', data)
+            this.currentEvent = data.data.objects[0];
+            this.loading = false
+        })
+      // }
+      // else{
+      //   console.log('user id', localStorage.userId)
+      // }
+      
+    },
+    reloadPage(){
+      this.userRole = localStorage.userRole
+      this.loading = true
+      
+      setTimeout(() => {
+        if(this.userRole != undefined){
+          getUserById(localStorage.userId).then(data=>{
+            this.userAdmin = data.data.objects[0]
+          })
+          getCurrentEvent().then(data=>{
+            console.log('requested event', data)
+            this.currentEvent = data.data.objects[0];
+            this.loading = false
+          })
+        }
+        
+      }, 500);   
     },
     toggleMenu(){
       var sidebar = document.getElementById('sidebar-nav');
@@ -212,13 +241,14 @@ export default {
     },
     logOut(){
       localStorage.hash = ''
+      localStorage.userId = ''
+      localStorage.organizationId = ''
+      localStorage.userRole = ''
       this.$root.isAuth = false
       this.$router.push('login')
-      this.requests.checkAuthorization().then(data=>{
-       console.log(data)
-       this.isLog = data
-     })
-    }
+      this.currentEvent.id = undefined
+      this.userAdmin = ''
+    },
   },
   created(){
     this.$eventBus.$on('reloadApp', ()=>{
@@ -231,7 +261,7 @@ export default {
     })
   },
   mounted(){
-     this.checkAuth()
+    //  this.checkAuth()
 
     //узнать выбранное событие
     this.loadPage()

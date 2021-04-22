@@ -31,40 +31,45 @@
                 {{user.id}} 
               </td>
               <td>
-                <input class="table-display-input table-event-name" type="text" v-model="user.name" :disabled="isDisabled">
+                <!-- :disabled="isDisabled"  -->
+                <input class="table-display-input table-event-name" type="text" v-model="user.name" :disabled="isDisabled!==index">
               </td>
               <td>
-                <input class="table-display-input table-event-name" type="text" v-model="user.surname" :disabled="isDisabled">
+                <input class="table-display-input table-event-name" type="text" v-model="user.surname" :disabled="isDisabled!==index">
               </td>
               <td>
-                <input class="table-display-input table-event-name" type="text" v-model="user.image" :disabled="isDisabled">
+                <input class="table-display-input table-event-name" type="text" v-model="user.image" :disabled="isDisabled!==index">
               </td>
               <td>
-                <input class="table-display-input table-event-name" type="text" v-model="user.organization_id" :disabled="isDisabled">
+                <input class="table-display-input table-event-name" type="text" v-model="user.organization_id" :disabled="isDisabled!==index">
               </td>
               <td>
-                <input class="table-display-input table-event-name" type="text" v-model="user.login" :disabled="isDisabled">
+                <input class="table-display-input table-event-name" type="text" v-model="user.login" :disabled="isDisabled!==index">
               </td>
               <td>
-                <input class="table-display-input table-event-name" type="text" v-model="user.password" :disabled="isDisabled">
+                <input class="table-display-input table-event-name" type="text" v-model="user.password" :disabled="isDisabled!==index">
               </td>
               <td>
-                <input class="table-display-input table-event-name" type="text" v-model="user.registrationDate" :disabled="isDisabled">
+                <input class="table-display-input table-event-name" type="text" v-model="user.registrationDate" :disabled="isDisabled!==index">
               </td>
               <td>
-                <input class="table-display-input table-event-name" type="text" v-model="user.role" :disabled="isDisabled">
+                <input class="table-display-input table-event-name" type="text" v-model="user.role" :disabled="isDisabled!==index">
               </td>
               <td>
-                <input class="table-display-input table-event-name" type="text" v-model="user.current_event" :disabled="isDisabled">
+                <input class="table-display-input table-event-name" type="text" v-model="user.current_event" :disabled="isDisabled!==index">
               </td>
                 <!-- <td>
                   <input class="table-display-input table-event-name" type="text" v-model="user.currentEventID" :disabled="isDisabled">
                   </td> -->
                 <td>
                   <div class="table-buttons-block">
-                    <button class="btn btn-outline-success btn-sm" v-on:click="editUser(index)">{{editBtn}}</button>
+                    <button class="btn btn-outline-success btn-sm" v-on:click="editUser(index)">
+                      <!-- {{editBtn}} -->
+                      <span v-if="isDisabled===index">Готово</span>
+                      <span v-else>Изменить</span>
+                      </button>
                     <!-- <button class="btn btn-outline-secondary btn-sm">Description</button> -->
-                    <button class="btn btn-outline-danger btn-sm" v-on:click="deleteUser(index)">Delete</button>
+                    <button class="btn btn-outline-danger btn-sm" v-on:click="deleteUser(index)">Удалить</button>
                   </div>
               </td>
             </tr>
@@ -94,7 +99,7 @@ export default {
               role: '',
               current_event: Number,
           }],
-      isDisabled: true,
+      isDisabled: '',
       editBtn: 'Edit',
       usr:{
               name: '',
@@ -114,7 +119,8 @@ export default {
         fetch('/api/get-users', {
             headers:{
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Token': localStorage.hash
             }
         }).then(res=>{
             var data = res.json()
@@ -127,24 +133,36 @@ export default {
       },
       editUser(index){
           console.log(index)
-          if (this.isDisabled) {
-              this.isDisabled = false
-              this.editBtn = 'Done'
+          if(this.isDisabled === ''){
+            console.log('Editing')
+            if(this.isDisabled)
+            this.editBtn = 'Done'
+            this.isDisabled = index
           }
           else{
-              this.isDisabled = true
-              this.editBtn = 'Edit'
-              fetch('/api/edit-user', {
-                credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
-                method: 'POST',              // метод POST 
-                body: JSON.stringify(this.users[index]),  // типа запрашиаемого документа
-                headers: new Headers({
-                  'Content-Type': 'application/json'
-                }),
-              }).then(res=>{
-                console.log('response', res);
-              })
+            this.editBtn = 'Edit'
+            this.isDisabled = ''
+            //update function
           }
+          // if (this.isDisabled) {
+          //     this.isDisabled = false
+          //     this.editBtn = 'Done'
+          // }
+          // else{
+          //     this.isDisabled = true
+          //     this.editBtn = 'Edit'
+          //     fetch('/api/edit-user', {
+          //       credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
+          //       method: 'POST',              // метод POST 
+          //       body: JSON.stringify(this.users[index]),  // типа запрашиаемого документа
+          //       headers: new Headers({
+          //         'Content-Type': 'application/json',
+          //         'Token': localStorage.hash
+          //       }),
+          //     }).then(res=>{
+          //       console.log('response', res);
+          //     })
+          // }
       },
       deleteUser(index){
           console.log(index)

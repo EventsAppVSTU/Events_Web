@@ -32,7 +32,7 @@
           <textarea name="place" id="place"  @input="fixTextareaSize()" placeholder="Город, улица, дом..." v-model="currentEvent.place" :disabled="isDisabled"></textarea>
           <h3 class="current-event_decription-header">Категория</h3>
           <textarea name="category_id" id="category_id"  @input="fixTextareaSize()" placeholder="id категории" v-model="currentEvent.category_id" :disabled="isDisabled"></textarea>
-
+          <CategoriesComboBox :currentCategory="currentEvent.id"/>
           <!-- <div class="event-card_img-container">
               <img src="img/map.png" alt="">
           </div> -->
@@ -43,11 +43,13 @@
 
 <script>
 import Upload from '../components/Upload.vue'
+import CategoriesComboBox from '../components/CategoriesComboBox'
 
 export default {
   name: 'CurrentEvent',
   components: {
-   Upload
+   Upload,
+   CategoriesComboBox
   },
   data: function(){
     return {
@@ -103,7 +105,8 @@ export default {
           method: 'POST',              // метод POST 
           body: JSON.stringify(this.currentEvent),  // типа запрашиаемого документа
           headers: new Headers({
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Token': localStorage.hash
           }),
         }).then(res=>{
           console.log(res)

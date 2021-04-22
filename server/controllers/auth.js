@@ -4,23 +4,56 @@ import fetch from 'node-fetch';
 import {getRequest, postRequest, putReguest, deleteRequest} from '../helpers/request.js'
 
 function signIn(req, res){
-    console.log('AUTH')
+    console.log('AUTH', `http://yaem.store/robo/users/userCredentalsInfo.php?login=${req.body.login}&password=${req.body.password}`)
 
-    getRequest(`http://yaem.store/robo/users/userCredentalsInfo.php?login=${req.body.login}&password=${req.body.password}`).then(data=>{
+    
+    fetch(`http://yaem.store/robo/users/userCredentalsInfo.php?login=${req.body.login}&password=${req.body.password}`, {
+
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+    }).then(res=>{
+        // console.log('req: ', url);
+        // console.log('req: ', requestObject);
+        var data = res.json();
+        console.log('this is data: ', data);
+        return data
+    }).then(data=>{
         const userData= data.data.objects[0]; 
+        console.log(userData)
+         
         // Если не пустой, то пользователь прошел проверку
         if(userData.password != '' && userData.login != ''){
             console.log('GOOD')
-            res.json({hash: userData.password})
+            res.json({user: userData})
         }
         else{
             //Возвращаем ошибку
             res.sendStatus(401)
         }
     }).catch(error=>{
+        console.log('bad')
         console.log(error)
         res.sendStatus(401)
     })
+
+    // getRequest(`http://yaem.store/robo/users/userCredentalsInfo.php?login=${req.body.login}&password=${req.body.password}`).then(data=>{
+        
+    //     console.log(userData)
+    //     const userData= data.data.objects[0]; 
+    //     // Если не пустой, то пользователь прошел проверку
+    //     if(userData.password != '' && userData.login != ''){
+    //         console.log('GOOD')
+    //         res.json({user: userData})
+    //     }
+    //     else{
+    //         //Возвращаем ошибку
+    //         res.sendStatus(401)
+    //     }
+    // }).catch(error=>{
+    //     console.log('bad')
+    //     console.log(error)
+    //     res.sendStatus(401)
+    // })
     
 
     // fetch('http://yaem.store/robo/users/userCredentals.php?id=1', {

@@ -1,30 +1,31 @@
 import fetch from 'node-fetch';
 
-function getRequest(url){
-    return request(url, 'GET')
+function getRequest(url, token){
+    return request(url, 'GET', '', token)
 }
 
-function postRequest(url, data){
-    return request(url, 'POST', data)
+function postRequest(url, data, token){
+    return request(url, 'POST', data, token)
 }
 
-function putReguest(url, data){
-    return request(url, 'PUT', data)
+function putReguest(url, data, token){
+    return request(url, 'PUT', data, token)
 }
 
-function deleteRequest(url){
-    return request(url, 'DELETE')
+function deleteRequest(url, token){
+    return request(url, 'DELETE', '', token)
 }
 
-function request(url, method, data){
+function request(url, method, data, token){
     return new Promise(function(resolve, reject){
         var requestObject = {}; 
         if(method == 'POST' || method == 'PUT'){
             requestObject = {
                 method: method, // метод PUT 
                 headers: new Headers({
+                    'Accept': 'application/json',
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': '1 111111_2',
+                    'Authorization': token,
                 }),
                 body: JSON.stringify(data)  
             }
@@ -33,21 +34,24 @@ function request(url, method, data){
         else{
             requestObject = {
                 method: method, // метод PUT 
-                headers: { 
-                    'Content-Type': 'application/json',
+                headers: new Headers({
                     'Accept': 'application/json',
-                    'Authorization': '1 111111_2'
-                }
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': token,
+                }),
             }
         }
         fetch(url, requestObject).then(res=>{
+            console.log('req: ', url);
+            console.log('req: ', requestObject);
+            console.log('TEEEEEEXT', )
             var data = res.json();
-            // console.log('RESPONSE: ', data);
+            console.log('this is data: ', data);
             return data
         }).then(data=>{
-            // console.log('this is data: ', data);
             resolve(data)
         }).catch(error=>{
+            console.log('че такое', error);
             reject(error)
         })
 

@@ -24,12 +24,17 @@
                 <input class="table-display-input table-event-name" type="text" v-model="chosenPerformance.user_id" :disabled="isDisabled">
               </td>
               <td>
+                <PerformancesComboBox :eventId="eventId" v-if="isDisabled===index"/>
                 <input class="table-display-input table-event-name" type="text" v-model="chosenPerformance.performance_id" :disabled="isDisabled">
               </td>
               <td>
                 <div class="table-buttons-block">
-                  <button class="btn btn-outline-success btn-sm" v-on:click="editOrganization(index)">{{editBtn}}</button>
-                  <button class="btn btn-outline-danger btn-sm" v-on:click="deleteOrganization(index)">Delete</button>
+                  <button class="btn btn-outline-success btn-sm" v-on:click="editChosenPerformance(index)">
+                    <!-- {{editBtn}} -->
+                    <span v-if="isDisabled===index">Готово</span>
+                      <span v-else>Изменить</span>
+                  </button>
+                  <button class="btn btn-outline-danger btn-sm" v-on:click="deleteChosenPerformance(index)">Delete</button>
                 </div>
               </td>
             </tr>
@@ -39,11 +44,14 @@
 </template>
 
 <script>
+import PerformancesComboBox from '../components/PerformancesComboBox'
+import {getChosenPerformances} from '../requests/chosenPerformances'
+import {getCurrentEvent} from '../requests/currentEvent'
 
 export default {
   name: 'ChosenPerformances',
   components: {
-    
+    PerformancesComboBox
   },
   data: function(){
       return {
@@ -69,85 +77,39 @@ export default {
               user_id: 'Андрей Сидоров',
               performance_id: 'Основы Open CV'
           }],
-      isDisabled: true,
-      editBtn: 'Edit',
+      isDisabled: '',
+      eventId: Number,
+      // editBtn: 'Edit',
       org:{
               name: ''
         }
       }
   },
   methods:{
-      getChosenEvents(){
-        fetch('/api/get-organizations', {
-            headers:{
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-        }).then(res=>{
-            var data = res.json()
-            return data
-        }).then(data=>{
-          console.log('this is data user: ', data.data.objects);
-          console.log(data.data.objects[0].id)
-            this.chosenEvents = data.data.objects
-        })
-      },
-      editOrganization(index){
-          console.log(index)
-          if (this.isDisabled) {
-              this.isDisabled = false
-              this.editBtn = 'Done'
+    loadPage(){
+      getChosenPerformances(this.eventId).then(data=>{
+        console.log('chosen performances ', data.data)
+      })
+    },
+    editChosenPerformance(index){
+       console.log('editing',index)
+          if(this.isDisabled === ''){
+            console.log('Editing')
+            this.isDisabled = index
           }
           else{
-              this.isDisabled = true
-              this.editBtn = 'Edit'
-              fetch('/api/edit-organization', {
-                credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
-                method: 'POST',              // метод POST 
-                body: JSON.stringify(this.organizations[index]),  // типа запрашиаемого документа
-                headers: new Headers({
-                  'Content-Type': 'application/json'
-                }),
-              }).then(res=>{
-                console.log('response', res);
-                this.getOrganizations();
-              })
+            console.log('NOT editing')
+            // this.editBtn = 'Edit'
+            this.isDisabled = ''
+            //update function
           }
-      },
-      deleteOrganization(index){
-          console.log(index)
-          fetch(`/api/delete-organization?id=${this.organizations[index].id}`, {
-            headers:{
-            'Content-Type': 'application/json'
-            }
-          }).then(res=>{
-            console.log('res', res);
-            return res;
-          }).then(data=>{
-            console.log(data);
-            this.getOrganizations();
-          })
-      }, 
-      createOrganization(){
-        console.log('creating organization')
-        fetch('/api/create-organization',{
-          credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
-          method: 'POST',              // метод POST 
-          body: JSON.stringify(this.org),  // типа запрашиаемого документа
-          headers:{
-            'Content-Type': 'application/json'
-          },
-        }).then(res=>{
-          console.log('res ', res);
-          return res;
-        }).then(data=>{
-          console.log('data ', data);
-          this.getOrganizations();
-        })
-      }
+    }
   },
   mounted(){
-      // this.getOrganizations()
+    getCurrentEvent().then(event=>{
+      this.eventId = parseInt(event.data.objects[0].id);
+      this.loadPage()
+    })
   }
 }
 </script>

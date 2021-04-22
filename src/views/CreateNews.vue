@@ -52,7 +52,12 @@ export default {
     },
     getCurrentEvent(){
       console.log('getting...')
-      fetch('/api/get-current-event-by-id?user=admin').then(res=>{
+      fetch('/api/get-current-event-by-id?user=admin',
+      {
+        headers:{
+          'Token': localStorage.hash
+        }
+      }).then(res=>{
             if(res.ok){
                 var data = res.json();
                 console.log('OK')

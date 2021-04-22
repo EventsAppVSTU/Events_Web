@@ -1,9 +1,9 @@
 <template>
   <div class="createEvent">
     <div class="current-event">
-        <form   action="/api/create-new-event" method="POST" id="createEventForm" >
+        <!-- <form   action="/api/create-new-event" method="POST" id="createEventForm" > -->
           <h2 class="current-event_header">
-              <input type="text" value="" name="name" placeholder="Название" id="name">
+              <input type="text" value="" name="name" placeholder="Название" id="name" v-model="createdEvent.name">
           </h2>
           <div class="event-card_img-container">
               <!-- <input type="file" name="image" id="image"> -->
@@ -24,48 +24,83 @@
               <h5 class="device-block-headers">Приватное событие</h5>
               <!-- Rounded switch -->
               <label class="switch">
-                <input type="checkbox">
+                <input type="checkbox" v-model="createdEvent.private">
+                <span class="slider round"></span>
+              </label>
+              <h5 class="device-block-headers">Событие организации</h5>
+              <!-- Rounded switch -->
+              <label class="switch">
+                <input type="checkbox" v-model="createdEvent.organization_event">
                 <span class="slider round"></span>
               </label>
             </div>
           </div>
           <h3 class="current-event_decription-header">Описание</h3>
-          <textarea name="description" id="description" cols="30" rows="6" placeholder="Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias suscipit totam quis ab saepe dolore aliquid provident quas aliquam cupiditate nobis doloremque porro ut eum dolorem architecto unde, repudiandae corporis."></textarea>
+          <textarea name="description" id="description" cols="30" rows="6" placeholder="Напишите тут описание вашего события..." v-model="createdEvent.description"></textarea>
           <h3 class="current-event_decription-header">Начало события</h3>
-          <textarea name="startDate" id="startDate" cols="30" rows="3" placeholder="Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias suscipit totam quis ab saepe dolore aliquid provident quas aliquam cupiditate nobis doloremque porro ut eum dolorem architecto unde, repudiandae corporis."></textarea>
+          <textarea name="startDate" id="startDate" cols="30" rows="3" placeholder="ГГГГ-ММ-ДД" v-model="createdEvent.startDate"></textarea>
           <h3 class="current-event_decription-header">Конец события</h3>
-          <textarea name="endDate" id="endDate" cols="30" rows="3" placeholder="Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias suscipit totam quis ab saepe dolore aliquid provident quas aliquam cupiditate nobis doloremque porro ut eum dolorem architecto unde, repudiandae corporis."></textarea>
+          <textarea name="endDate" id="endDate" cols="30" rows="3" placeholder="ГГГГ-ММ-ДД" v-model="createdEvent.endDate"></textarea>
           <h3 class="current-event_decription-header">Место проведения</h3>
-          <textarea name="place" id="place" cols="30" rows="3" placeholder="Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias suscipit totam quis ab saepe dolore aliquid provident quas aliquam cupiditate nobis doloremque porro ut eum dolorem architecto unde, repudiandae corporis."></textarea>
-          <h3 class="current-event_decription-header">Категория</h3>
-          <textarea name="category_id" id="" cols="30" rows="3" placeholder="Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias suscipit totam quis ab saepe dolore aliquid provident quas aliquam cupiditate nobis doloremque porro ut eum dolorem architecto unde, repudiandae corporis."></textarea>
-
+          <textarea name="place" id="place" cols="30" rows="3" placeholder="Укажите адрес места порведения мероприятия" v-model="createdEvent.place"></textarea>
+          <h3 class="current-event_decription-header">  Категория</h3>
+          <CategoriesComboBox @categorySelected="setCategory" />
+          <textarea name="category_id" id="" cols="30" rows="3" placeholder="категория" v-model="createdEvent.category_id"></textarea>
           
 
           <!-- <div class="event-card_img-container">
               <img src="img/map.png" alt="">
           </div> -->
           <!-- <input type="submit" value="Save"> -->
-          <button type="submit" class="btn btn-outline-danger btn-rounded" v-on:click="createEvent()">Create Event</button>
-        </form>
+          <button type="submit" class="btn btn-outline-danger btn-rounded" v-on:click="createEvent($event)">Create Event</button>
+        <!-- </form> -->
     </div>
   </div>
 </template>
 
 <script>
 import Upload from '../components/Upload.vue'
-
+import CategoriesComboBox from '../components/CategoriesComboBox'
+import {postEvent} from '../requests/events'
 export default {
   name: 'CreateEvent',
   components: {
-   Upload
+   Upload,
+   CategoriesComboBox
+  },
+  data(){
+    return {
+      createdEvent: {
+        name: '',
+        description: '',
+        image: '',
+        startDate: '',
+        endDate: '',
+        category_id: '',
+        place: '',
+        private: 0,
+        organization_event: 0,
+        organization_id: localStorage.organizationId,
+        
+      }
+    }
   },
   methods:{
-    createEvent(){
+    createEvent(event){
+      if (event) {
+        event.preventDefault()
+      }
       // взять данные с формы
       console.log('werwer')
-
+      postEvent(this.createdEvent).then(data=>{
+        console.log(data)
+        this.$route.push('/')
+      })
       // установить созданное событие как текущее
+    },
+    setCategory(params){
+      console.log('cat', params.category)
+      this.createdEvent.category_id = params.category
     }
   }
 }

@@ -63,46 +63,65 @@ export default {
                     password: this.password
                   }
 
+        console.log('signing in')
         signIn(data).then(res =>{
           console.log('NEW sign in: ', res)
+          console.log('token: ', res.user.id+ ' '+res.user.password)
+          localStorage.hash = res.user.id+ ' '+res.user.password
+          localStorage.userRole = res.user.role
+          localStorage.userId = res.user.id
+          localStorage.organizationId = res.user.organization_id
+
+            console.log('cppkie', localStorage)
+            console.log(this.$route.params.nextUrl)
+            if(localStorage.userRole == 2){
+              console.log('redirection to users')
+              this.$router.replace('users')
+            }
+            else{
+              console.log('redirection to events')
+              this.$router.replace('events')
+            }
+            this.$eventBus.$emit('reloadApp')
+            this.$emit('checkAuthAgain');
         }).catch(err=>{
           console.log('Cannot login ', err)
           this.displayError = true
           this.loginErrorMessage = 'Логин или пароль неверный'
         })
         // отправить на сервер
-        fetch('/api/sign-in',{
-          credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
-          method: 'POST',              // метод POST 
-          body: JSON.stringify(data),  // типа запрашиаемого документа
-          headers: new Headers({
-            'Content-Type': 'application/json'
-          })
-        }).then(res=>{
-          var data = res.json()
-          return data
-        }).then(data=>{
-          console.log(data)
-          if(data.hash == 'No user found'){
-            this.displayError = true
-            this.loginErrorMessage = 'No user found'
-          }
-          else if(data.hash == ''){
-            this.displayError = true
-            this.loginErrorMessage = 'Incorrect'
-          }
-          else{
-            //Все хорошо, делаем редирект
-            // this.isLog = true
-            localStorage.hash = data.hash
-            // this.$root.isAuth = true
-            console.log('cppkie', localStorage)
-            // this.checkAutorization;
-            console.log(this.$route.params.nextUrl)
-            this.$router.replace('events')
-            this.$emit('checkAuthAgain');
-            }
-        })
+        // fetch('/api/sign-in',{
+        //   credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
+        //   method: 'POST',              // метод POST 
+        //   body: JSON.stringify(data),  // типа запрашиаемого документа
+        //   headers: new Headers({
+        //     'Content-Type': 'application/json'
+        //   })
+        // }).then(res=>{
+        //   var data = res.json()
+        //   return data
+        // }).then(data=>{
+        //   console.log(data)
+        //   if(data.hash == 'No user found'){
+        //     this.displayError = true
+        //     this.loginErrorMessage = 'No user found'
+        //   }
+        //   else if(data.hash == ''){
+        //     this.displayError = true
+        //     this.loginErrorMessage = 'Incorrect'
+        //   }
+        //   else{
+        //     //Все хорошо, делаем редирект
+        //     // this.isLog = true
+        //     localStorage.hash = data.hash
+        //     // this.$root.isAuth = true
+        //     console.log('cppkie', localStorage)
+        //     // this.checkAutorization;
+        //     console.log(this.$route.params.nextUrl)
+        //     this.$router.replace('events')
+        //     this.$emit('checkAuthAgain');
+        //     }
+        // })
 
 
       }

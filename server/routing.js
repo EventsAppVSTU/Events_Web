@@ -6,11 +6,13 @@ import {getEvets, createNewEvent, updateEvent, deleteEvent} from './controllers/
 import {getEventNews, createNews, deleteEventNews} from './controllers/news.js'
 import {getCurrentEvent, setCurrentEvent} from './controllers/currentEvent.js'
 import {getPerformances, createPerformance, updatePerformance, deletePerformance} from './controllers/performances.js'
-import {getUsers, createUser, updateUser, deleteUser} from './controllers/users.js'
+import {getUsers, createUser, updateUser, deleteUser, getUserById} from './controllers/users.js'
 import {getChosenEvents} from './controllers/chosenEents.js'
 import {getOrganizations, createOrganization, updateOrganization, deleteOrganization} from './controllers/organizations.js'
 import {getCategories, createCategory, updateCategory, deleteCategory} from './controllers/categories.js'
 import {signIn, auth} from './controllers/auth.js'
+
+import {getChosenPerformances} from './controllers/chosenPerformances.js'
 
 import {acceptUserOnEvent, declineUserRequest} from './controllers/privateEvent.js'
 
@@ -27,8 +29,6 @@ app.get('/api', urlencodedParser, (req, res,)=>{ //выдает страницу
 //____________________События____________________________
 //_______________________________________________________
 app.get('/api/events', urlencodedParser, getEvets)
-
-
 
 app.post('/api/create-new-event', urlencodedParser, createNewEvent)
 
@@ -75,6 +75,7 @@ app.post('/api/delete-performance-by-id', urlencodedParser, deletePerformance)
 
 //Запрос таблицы всех пользователей
 app.get('/api/get-users', getUsers);
+app.get('/api/get-user-by-id', getUserById)
 
 //Создание пользователя
 app.post('/api/create-user', createUser)
@@ -90,6 +91,11 @@ app.get('/api/delete-user', deleteUser);
 //___________________________________________________ 
 
 app.get('/api/get-сhosen-events', urlencodedParser, getChosenEvents);
+
+//______________Выбраные Выступления____________________
+//___________________________________________________ 
+app.get('/api/chosenPerformances', urlencodedParser, getChosenPerformances)
+
 //_____________________Организации________________________
 //________________________________________________________
 
@@ -127,7 +133,6 @@ app.post('/api/sign-in', urlencodedParser, signIn)
 app.post('/api/auth', urlencodedParser, auth)
 app.post('/api/private-event-accept',urlencodedParser, acceptUserOnEvent)
 app.post('/api/private-event-decline',urlencodedParser, declineUserRequest)
-
 
 
 }

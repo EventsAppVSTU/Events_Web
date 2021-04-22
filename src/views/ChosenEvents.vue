@@ -80,7 +80,8 @@ export default {
         fetch('/api/get-organizations', {
             headers:{
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Token': localStorage.hash
             }
         }).then(res=>{
             var data = res.json()
@@ -105,7 +106,8 @@ export default {
                 method: 'POST',              // метод POST 
                 body: JSON.stringify(this.organizations[index]),  // типа запрашиаемого документа
                 headers: new Headers({
-                  'Content-Type': 'application/json'
+                  'Content-Type': 'application/json',
+                  'Token': localStorage.hash
                 }),
               }).then(res=>{
                 console.log('response', res);

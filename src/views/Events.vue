@@ -9,19 +9,17 @@
     <div class="event-card" v-for="eventCard in filteredEvents" :key="eventCard.name">
       <hr class="event-card_hr">
       <div class="event-card_img-container" v-on:click="setCurrentEvent(eventCard.id)">
-        <div class="event-rating" >
+        <!-- <div class="event-rating" >
           <div class="stars" v-for="i in 5" :key="i">
-
             <svg class="feather event-rating-star">
               <use xlink:href="@/assets/feather-sprite.svg#star"/>
             </svg>
-          </div>
-          
-        </div>
+          </div>          
+        </div> -->
         <img :src="eventCard.image" alt="">
       </div>
       <p class="event-card_category">
-        <svg class="feather" v-if="eventCard.name=='Секретные разработки'">
+        <svg class="feather" v-if="eventCard.private == 1">
           <use xlink:href="@/assets/feather-sprite.svg#lock"/>
         </svg>
         {{eventCard.category_name}}
@@ -36,6 +34,7 @@
 </template>
 
 <script>
+import { getEvets } from '../requests/events'
 export default {
   name: 'Events',
   props: {
@@ -68,47 +67,55 @@ export default {
   methods:{
     loadEvents: function(){
             console.log('loading..')
-            fetch(`/api/events`, {
-            headers : { 
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-
-            }).then(res=>{
-              console.log('here')
-                  if(res.ok){
-                      var data = res.json();
-                      console.log(data);
-                      return data;
-                  }
-                  else{
-                      console.log('er get rooms :(');
-                      throw new Error ('er');
-                  }
-              }).then(data=>{
-                  console.log(data.data.objects);
-                  this.eventCards = data.data.objects;
-
-                  // id – уникальный номер;
-                  // name – название;
-                  // description – описание;
-                  // startDate – дата начала
-                  // endDate – дата окончания
-                  // image – путь к файлу с картинкой (ПРИ ДОБАВЛЕНИИ И РЕДАКТИРОВАНИИ ИГНОРИРУЕТСЯ, добавляется по-другому)
-                  // category_id – номер категории события
-                  // category_name - категория словами
-                  
+            if(localStorage.organizationId != undefined){
+              getEvets(localStorage.organizationId).then(data=>{
+                console.log(data.data.objects);
+                    this.eventCards = data.data.objects;
               })
+            }
+            // fetch(`/api/events`, {
+            // headers : { 
+            //     'Content-Type': 'application/json',
+            //     'Accept': 'application/json',
+            //     'Token': localStorage.hash
+            // }
+
+            // }).then(res=>{
+            //   console.log('here')
+            //       if(res.ok){
+            //           var data = res.json();
+            //           console.log(data);
+            //           return data;
+            //       }
+            //       else{
+            //           console.log('er get rooms :(');
+            //           throw new Error ('er');
+            //       }
+            //   }).then(data=>{
+            //       console.log(data.data.objects);
+            //       this.eventCards = data.data.objects;
+
+            //       // id – уникальный номер;
+            //       // name – название;
+            //       // description – описание;
+            //       // startDate – дата начала
+            //       // endDate – дата окончания
+            //       // image – путь к файлу с картинкой (ПРИ ДОБАВЛЕНИИ И РЕДАКТИРОВАНИИ ИГНОРИРУЕТСЯ, добавляется по-другому)
+            //       // category_id – номер категории события
+            //       // category_name - категория словами
+                  
+            //   })
           },
           getImgUrl(pic) {
             return require('../assets/' + pic);
           },
           setCurrentEvent(eventID){
             
-            fetch(`/api/set-current-event-by-id?user=admin&event=${eventID}`, {
+            fetch(`/api/set-current-event-by-id?userId=${localStorage.userId}&event=${eventID}`, {
             headers : { 
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Token': localStorage.hash
             }
 
             }).then(res=>{
@@ -142,6 +149,13 @@ export default {
     filteredEvents: function(){
       var eventsArray = this.eventCards;
       var searchString = this.searchString;
+
+      //фильтрация для отображения только тех событий, которые организации админа
+      eventsArray = eventsArray.filter(function(item){
+        if (item.organization_id == localStorage.organizationId) {
+          return item;
+        }
+      })
 
       if (!searchString) {
         return eventsArray;

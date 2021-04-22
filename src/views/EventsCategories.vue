@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import {getCategories} from '../requests/categories'
 
 export default {
   name: 'EventsCategories',
@@ -55,19 +56,25 @@ export default {
   },
   methods:{
       getCategories(){
-        fetch('/api/get-categories', {
-            headers:{
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-        }).then(res=>{
-            var data = res.json();
-            return data;
-        }).then(data=>{
-          console.log('this is data user: ', data.data.objects);
+        getCategories().then(data=>{
           console.log(data.data.objects[0].id)
             this.categories = data.data.objects;
+        }).catch(err=>{
+          console.log(err)
         })
+        // fetch('/api/get-categories', {
+        //     headers:{
+        //         'Content-Type': 'application/json',
+        //         'Accept': 'application/json'
+        //     }
+        // }).then(res=>{
+        //     var data = res.json();
+        //     return data;
+        // }).then(data=>{
+        //   console.log('this is data user: ', data.data.objects);
+        //   console.log(data.data.objects[0].id)
+        //     this.categories = data.data.objects;
+        // })
       },
       editCategory(index){
           console.log(index)
@@ -112,7 +119,8 @@ export default {
           method: 'POST',              // метод POST 
           body: JSON.stringify(this.cat),  // типа запрашиаемого документа
           headers:{
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Token': localStorage.hash
           },
         }).then(res=>{
           console.log('res ', res);

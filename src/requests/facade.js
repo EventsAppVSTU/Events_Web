@@ -26,6 +26,7 @@ function requestGenerator(method, data, token){
                 headers: new Headers({
                     'Content-Type': 'application/json',
                     'Authorization': token,
+                    'Token': localStorage.hash
                 }),
                 body: JSON.stringify(data)  
             }
@@ -38,7 +39,8 @@ function requestGenerator(method, data, token){
                 headers: { 
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    'Authorization': token
+                    'Authorization': token,
+                    'Token': localStorage.hash
                 }
             }
         }

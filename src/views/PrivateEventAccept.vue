@@ -168,7 +168,8 @@ export default {
         method: 'POST',              // метод POST 
         body: JSON.stringify(user),  // типа запрашиаемого документа
         headers: new Headers({
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Token': localStorage.hash
         }),
       })
       .then(response => {
@@ -188,7 +189,8 @@ export default {
         method: 'POST',              // метод POST 
         body: JSON.stringify(user),  // типа запрашиаемого документа
         headers: new Headers({
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Token': localStorage.hash
         }),
       })
       .then(response => {

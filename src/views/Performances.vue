@@ -106,6 +106,8 @@
 
 <script>
 import CreatePerformance from '../components/CreatePerformance.vue'
+import {getCurrentEvent} from '../requests/currentEvent'
+import {getPerformances} from '../requests/performances'
 
 export default {
   name: 'Performances',
@@ -156,46 +158,62 @@ export default {
     updatePerformancesTable(){
         // узнать мероприятие
       console.log('going to fetch current event')
-      fetch('/api/get-current-event-by-id?user=admin',{
-              headers : { 
-                  'Content-Type': 'application/json',
-                  'Accept': 'application/json'
-              }
-      }).then(res=>{
-        if(res.ok){
-                var data = res.json();
-                console.log('data', data)
-                return data;
-            }
-            else{
-                console.log('er get rooms :(');
-                throw new Error ('er');
-            }
-      }).then(one=>{
-        console.log('event data', one.data.objects)
-        this.currentEvent = one.data.objects[0]
-        console.log(one.data.objects[0].name)
-          //запросить выступления
-        fetch(`/api/get-performances-by-id?event=${one.data.objects[0].id}`, {
-          headers : { 
-                  'Content-Type': 'application/json',
-                  'Accept': 'application/json'
-              }
-        }).then(res=>{
-        if(res.ok){
-                var data = res.json();
-                console.log('data', data)
-                return data;
-            }
-            else{
-                console.log('er get rooms :(');
-                throw new Error ('er');
-            }
-        }).then(data=>{
-          console.log('performances', data)
-              this.performances = data.data.objects
+      getCurrentEvent().then(eventData=>{
+        console.log('event data', eventData.data.objects)
+        this.currentEvent = eventData.data.objects[0]
+        console.log(eventData.data.objects[0].name)
+
+        getPerformances(eventData.data.objects[0].id).then(data=>{
+          this.performances = data.data.objects
+        }).catch(err=>{
+          console.log(err)
         })
+
+      }).catch(err=>{
+          console.log(err)
       })
+
+      // fetch('/api/get-current-event-by-id?user=admin',{
+      //         headers : { 
+      //             'Content-Type': 'application/json',
+      //             'Accept': 'application/json',
+      //             'Token': localStorage.hash
+      //         }
+      // }).then(res=>{
+      //   if(res.ok){
+      //           var data = res.json();
+      //           console.log('data', data)
+      //           return data;
+      //       }
+      //       else{
+      //           console.log('er get rooms :(');
+      //           throw new Error ('er');
+      //       }
+      // }).then(one=>{
+      //   console.log('event data', one.data.objects)
+      //   this.currentEvent = one.data.objects[0]
+      //   console.log(one.data.objects[0].name)
+      //     //запросить выступления
+      //   fetch(`/api/get-performances-by-id?event=${one.data.objects[0].id}`, {
+      //     headers : { 
+      //             'Content-Type': 'application/json',
+      //             'Accept': 'application/json'
+      //         }
+      //   }).then(res=>{
+      //   if(res.ok){
+      //           var data = res.json();
+      //           console.log('data', data)
+      //           return data;
+      //       }
+      //       else{
+      //           console.log('er get rooms :(');
+      //           throw new Error ('er');
+      //       }
+      //   }).then(data=>{
+      //     console.log('performances', data)
+      //         this.performances = data.data.objects
+      //   })
+      // })
     },
     createPerformance(){
       this.perf.event_id = this.currentEvent.id
@@ -266,7 +284,8 @@ export default {
           method: 'POST',              // метод POST 
           body: JSON.stringify(data),  // типа запрашиаемого документа
           headers: new Headers({
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Token': localStorage.hash
           }),
         })
         .then(response => {
@@ -293,7 +312,8 @@ export default {
           method: 'POST',              // метод POST 
           body: JSON.stringify(data),  // типа запрашиаемого документа
           headers: new Headers({
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Token': localStorage.hash
           }),
         })
         .then(response => {

@@ -22,13 +22,14 @@ function acceptUserOnEvent(req, res){
   console.log('Template: ', letterDraft)
   const mail = new Letter(letterDraft)
   mail.sendMail().then(result=>{
+    //Отправить на сервер код 
+    //Сущность –заявки на приватные события
+    // /events/bids.php
+    // Пример JSON - {"id":1, "user_id":1, "event_id":1, "state_id":1}
+
     res.json({status: result})
   })
 
-  // //отправить его на почту пользователю
-  // sendMail(mail).then(result=>{
-  //   res.json({status: result})
-  // })
 
 }
 
@@ -36,6 +37,8 @@ function declineUserRequest(req, res){
   const letterDraft = new DeclineUserRequestLetter(req.body.name, req.body.requestedEvent).createLetter()
   const mail = new Letter(letterDraft)
   mail.sendMail().then(result=>{
+    // отправляем на сервер 
+    // состояние "отклонено" /events/bids.php
     res.json({status: result})
   })
 }

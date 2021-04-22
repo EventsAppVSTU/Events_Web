@@ -17,7 +17,7 @@ import Login from '../views/Login.vue'
 // import { format } from 'core-js/fn/date'
 
 // import Store from '../store'
-import requests from '../requests'  //Запросы
+// import requests from '../requests'  //Запросы
 
 Vue.use(VueRouter)
 
@@ -32,7 +32,6 @@ Vue.use(VueRouter)
     name: 'Login',
     component: Login
   },
-
   {
     path: '/login',
     name: 'Login',
@@ -162,18 +161,22 @@ const router = new VueRouter({
 router.beforeEach((to, from, next)=>{
   // var currentUser = '';
   // console.log(currentUser)
-  requests.checkAuthorization().then(data=>{
-    var currentUser = data // currentUser = true/false
-    console.log('cur user ', currentUser)
+  // requests.checkAuthorization().then(data=>{
+    // var currentUser = data // currentUser = true/false
+    // console.log('cur user ', currentUser)
     
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   
-    if (requiresAuth && !currentUser){ next('login'); console.log('NOOO')} 
-    else if (!requiresAuth && currentUser) {next('home'); console.log('welcome Home')}
+    // if (requiresAuth && !currentUser){ next('login'); console.log('NOOO')} 
+    // else if (!requiresAuth && currentUser) {next('home'); console.log('welcome Home')}
+    // else {next(); console.log('here')}
+    console.log('router index', requiresAuth && ( localStorage.hash == undefined))
+
+    if (requiresAuth && (localStorage.hash == '' || localStorage.hash == undefined)){ next('login'); console.log('NOOO')} 
+    else if (!requiresAuth && localStorage.hash == undefined) {next('home'); console.log('welcome Home')}
     else {next(); console.log('here')}
-    // next(); console.log('here')
     
-  })
+  // })
 })
 
 //Сделать checkAuthorization() глобальной функцией и App.vue при монтировании запускать ее, и из расчета возвращаемого (true/false) отображать или нет sidebar

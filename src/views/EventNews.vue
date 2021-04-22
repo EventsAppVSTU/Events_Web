@@ -72,7 +72,8 @@ export default {
             fetch(`/api/event-news?event_id=${currentEvent}`, {
             headers : { 
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Token': localStorage.hash
             }
             }).then(res=>{
               console.log('here news')
@@ -110,7 +111,8 @@ export default {
               method: 'POST',              // метод POST 
               body: JSON.stringify(data),  // типа запрашиаемого документа
               headers: new Headers({
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Token': localStorage.hash
               }),
             }).then(res=>{
               return res.json()

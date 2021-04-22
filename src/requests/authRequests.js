@@ -9,8 +9,6 @@ function signIn(data){
     })
 }
 
-
-
 export {
-    signIn,
+    signIn
 }
