@@ -17,9 +17,19 @@ function postEvent(data){
     })
 }
 
+function putEvent(data){
+    return sendRequest({
+        method: 'PUT',
+        url: '/api/update-event',
+        data: data,
+        token: localStorage.token
+    })
+}
+
 
 
 export {
     getEvets,
-    postEvent
+    postEvent,
+    putEvent
 }

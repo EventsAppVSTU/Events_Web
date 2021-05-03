@@ -6,7 +6,7 @@ import {getEvets, createNewEvent, updateEvent, deleteEvent} from './controllers/
 import {getEventNews, createNews, deleteEventNews} from './controllers/news.js'
 import {getCurrentEvent, setCurrentEvent} from './controllers/currentEvent.js'
 import {getPerformances, createPerformance, updatePerformance, deletePerformance} from './controllers/performances.js'
-import {getUsers, createUser, updateUser, deleteUser, getUserById} from './controllers/users.js'
+import {getUsers, createUser, updateUser, deleteUser, getUserById, getAdmins} from './controllers/users.js'
 import {getChosenEvents} from './controllers/chosenEents.js'
 import {getOrganizations, createOrganization, updateOrganization, deleteOrganization} from './controllers/organizations.js'
 import {getCategories, createCategory, updateCategory, deleteCategory} from './controllers/categories.js'
@@ -50,7 +50,7 @@ app.get('/api/get-current-event-by-id', urlencodedParser, getCurrentEvent)
 app.get('/api/set-current-event-by-id', urlencodedParser, setCurrentEvent)
 
 //Обновить событие
-app.post('/api/update-event', urlencodedParser, updateEvent)
+app.put('/api/update-event', urlencodedParser, updateEvent)
 
 //Удалить событие
 app.post('/api/delete-event-by-id', urlencodedParser, deleteEvent)
@@ -75,16 +75,17 @@ app.post('/api/delete-performance-by-id', urlencodedParser, deletePerformance)
 
 //Запрос таблицы всех пользователей
 app.get('/api/get-users', getUsers);
+app.get('/api/get-admins', getAdmins);
 app.get('/api/get-user-by-id', getUserById)
 
 //Создание пользователя
 app.post('/api/create-user', createUser)
 
 //Редактирование пользователя
-app.post('/api/edit-user', updateUser)
+app.put('/api/edit-user', updateUser)
 
 //Удаление пользователя
-app.get('/api/delete-user', deleteUser);
+app.delete('/api/delete-user', deleteUser);
 
 
 //______________Выбраные События____________________

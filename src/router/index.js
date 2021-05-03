@@ -173,7 +173,7 @@ router.beforeEach((to, from, next)=>{
     console.log('router index', requiresAuth && ( localStorage.hash == undefined))
 
     if (requiresAuth && (localStorage.hash == '' || localStorage.hash == undefined)){ next('login'); console.log('NOOO')} 
-    else if (!requiresAuth && localStorage.hash == undefined) {next('home'); console.log('welcome Home')}
+    // else if (!requiresAuth && localStorage.hash == undefined) {next('home'); console.log('welcome Home')}
     else {next(); console.log('here')}
     
   // })

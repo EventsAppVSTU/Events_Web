@@ -47,7 +47,7 @@
 export default {
   name: 'CreatePerformance',
   props: {
-    event_id: Number
+    event_id: null
   },
   data (){
     return {

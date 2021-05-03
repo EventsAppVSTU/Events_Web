@@ -45,7 +45,7 @@
           <textarea name="place" id="place" cols="30" rows="3" placeholder="Укажите адрес места порведения мероприятия" v-model="createdEvent.place"></textarea>
           <h3 class="current-event_decription-header">  Категория</h3>
           <CategoriesComboBox @categorySelected="setCategory" />
-          <textarea name="category_id" id="" cols="30" rows="3" placeholder="категория" v-model="createdEvent.category_id"></textarea>
+          <!-- <textarea name="category_id" id="" cols="30" rows="3" placeholder="категория" v-model="createdEvent.category_id"></textarea> -->
           
 
           <!-- <div class="event-card_img-container">

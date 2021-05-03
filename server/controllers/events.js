@@ -67,8 +67,8 @@ function updateEvent(req, res){
         category_id: req.body.category_id,
 
         private: req.body.private,
-        organization_event: req.body.organizationEvent,
-        organization_id: req.body.organizationId
+        organization_event: req.body.organization_event,
+        organization_id: req.body.organization_id
     }
     
     console.log('this data I will send: ', data);

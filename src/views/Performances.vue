@@ -1,6 +1,6 @@
 <template>
   <div class="Performances">
-    <h2>Performances</h2>
+    <h2>Расписание</h2>
         <CreatePerformance :event_id="currentEvent.id" @updatePerfTable="updatePerformancesTable" />
         <div v-if="performances == ''" class="message-empty-content">
           <h5>Нет выступлений</h5>
@@ -33,7 +33,7 @@
                 <h6 v-show="(pressedButtonIndex === index)">Описание</h6>
                 <textarea @input="fixTextareaSize()" rows="5" class="performance-description" name="" id=""  v-show="(pressedButtonIndex === index)" v-model="performance.description" :disabled="isDisabled!==index"></textarea>
                 <iframe  v-show="(pressedButtonIndex === index)" width="560" height="315" src="https://www.youtube.com/embed/rokGy0huYEA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                <button v-if="performance.description.length > 1" class="news-button-more"  v-on:click="expandThisNews(index)">
+                <button v-if="performance.description != undefined" class="news-button-more"  v-on:click="expandThisNews(index)">
                   More <svg class="feather" :class="{'rotate-news-arrow': pressedButtonIndex === index}">
                           <use xlink:href="@/assets/feather-sprite.svg#chevron-right"/>
                       </svg>
@@ -127,7 +127,8 @@ export default {
             date: "19-06-2020",
             time: "10:00",
             speaker: "Иван Иванов",
-            },{id: 2, 
+            }
+            ,{id: 2, 
             name: "Проблемы робототехники",
             date: "19-06-2020",
             time: "11:00",
@@ -140,6 +141,16 @@ export default {
             date: "19-06-2020",
             time: "14:00",
             speaker: "Иван Иванов"}],
+//             id – уникальный номер;
+// name – название;
+// description – описание;
+// dataPerf – дата мероприятия
+// startTime – время начала
+// endTime – время окончания
+// speaker – спикер
+// event_id – номер события.
+
+
       perf: {
         name: '',
         datePerf: '',
@@ -352,7 +363,14 @@ export default {
   },
   mounted(){
     this.updatePerformancesTable();
-    this.getCurrentEvent()
+    getCurrentEvent().then(eventData=>{
+        console.log('event data', eventData.data.objects)
+        this.currentEvent = eventData.data.objects[0]
+        console.log(eventData.data.objects[0].name)
+
+      }).catch(err=>{
+          console.log(err)
+      })
     setTimeout(() => {
       this.fixTextareaSize()
     }, 500);

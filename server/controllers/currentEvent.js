@@ -72,18 +72,21 @@ function setCurrentEvent(req, res){
     
     getRequest(`http://yaem.store/robo/users/userCredentals.php?id=${req.query.userId}`, req.headers.token).then(data=>{
         console.log('this is data: ', data.data.objects[0]);
-        dataToUpdate.name = data.data.objects[0].name;
-        dataToUpdate.surname = data.data.objects[0].surname;
-        dataToUpdate.image = data.data.objects[0].image;
-        dataToUpdate.organization_id = data.data.objects[0].organization_id;
-        dataToUpdate.current_event = req.query.event;
-        dataToUpdate.login = data.data.objects[0].login;
-        dataToUpdate.password = data.data.objects[0].password;
+        // dataToUpdate.name = data.data.objects[0].name;
+        // dataToUpdate.surname = data.data.objects[0].surname;
+        // dataToUpdate.image = data.data.objects[0].image;
+        // dataToUpdate.organization_id = data.data.objects[0].organization_id;
+        // dataToUpdate.current_event = req.query.event;
+        // dataToUpdate.login = data.data.objects[0].login;
+        // dataToUpdate.password = data.data.objects[0].password;
 
-        dataToUpdate.organization_verify = data.data.objects[0].organization_verify; //new
-        dataToUpdate.phone = data.data.objects[0].phone; //new
-        dataToUpdate.web_link = data.data.objects[0].web_link; //new
-        dataToUpdate.bio = data.data.objects[0].bio; //new
+        // dataToUpdate.organization_verify = data.data.objects[0].organization_verify; //new
+        // dataToUpdate.phone = data.data.objects[0].phone; //new
+        // dataToUpdate.web_link = data.data.objects[0].web_link; //new
+        // dataToUpdate.bio = data.data.objects[0].bio; //new
+
+        dataToUpdate = data.data.objects[0]
+        dataToUpdate.current_event = req.query.event;
         putReguest('http://yaem.store/robo/users/userCredentals.php', dataToUpdate, req.headers.token).then(data=>{
             res.json(data);
         }).catch(err=>{

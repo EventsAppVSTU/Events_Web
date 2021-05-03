@@ -31,7 +31,7 @@
         </div>
         <p class="news-card_description" :class="{'short-text' : !(pressedButtonIndex === index)}">{{newsCard.description}}</p>
         <button v-if="newsCard.description.length > 55" class="news-button-more"  v-on:click="expandThisNews(index)">
-          More <svg class="feather" :class="{'rotate-news-arrow': pressedButtonIndex === index}">
+          Подробнее <svg class="feather" :class="{'rotate-news-arrow': pressedButtonIndex === index}">
                   <use xlink:href="@/assets/feather-sprite.svg#chevron-right"/>
               </svg>
         </button>

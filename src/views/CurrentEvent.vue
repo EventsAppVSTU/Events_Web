@@ -20,6 +20,20 @@
             <input v-else :src="currentEvent.image" type="text" name="image" id="image" class="input-photo-link" placeholder="Link to the Photo" v-model="currentEvent.image ">
             <Upload/>
             
+            <div class="privateEvent-switch-block">
+              <h5 class="device-block-headers">Приватное событие</h5>
+              <!-- Rounded switch -->
+              <label class="switch">
+                <input type="checkbox" v-model="currentEvent.private">
+                <span class="slider round"></span>
+              </label>
+              <h5 class="device-block-headers">Событие организации</h5>
+              <!-- Rounded switch -->
+              <label class="switch">
+                <input type="checkbox" v-model="currentEvent.organization_event">
+                <span class="slider round"></span>
+              </label>
+            </div>
           </div>
 
           <h3 class="current-event_decription-header">Описание</h3>
@@ -31,8 +45,8 @@
           <h3 class="current-event_decription-header">Место проведения</h3>
           <textarea name="place" id="place"  @input="fixTextareaSize()" placeholder="Город, улица, дом..." v-model="currentEvent.place" :disabled="isDisabled"></textarea>
           <h3 class="current-event_decription-header">Категория</h3>
-          <textarea name="category_id" id="category_id"  @input="fixTextareaSize()" placeholder="id категории" v-model="currentEvent.category_id" :disabled="isDisabled"></textarea>
-          <CategoriesComboBox :currentCategory="currentEvent.id"/>
+          <!-- <textarea name="category_id" id="category_id"  @input="fixTextareaSize()" placeholder="id категории" v-model="currentEvent.category_id" :disabled="isDisabled"></textarea> -->
+          <CategoriesComboBox @categorySelected="setCategory" :currentCategory="currentEvent" :disabled="isDisabled"/>
           <!-- <div class="event-card_img-container">
               <img src="img/map.png" alt="">
           </div> -->
@@ -45,6 +59,8 @@
 import Upload from '../components/Upload.vue'
 import CategoriesComboBox from '../components/CategoriesComboBox'
 
+import {putEvent} from '../requests/events'
+
 export default {
   name: 'CurrentEvent',
   components: {
@@ -55,19 +71,33 @@ export default {
     return {
       currentEvent: {
         id: 1, 
-        name: "Робоcr",
-        description: "Lorem ipsum dolor sit amet orem ipsum dolor sit amet orem ipsum dolor sit amet orem ipsum dolor sit amet.",
+        // name: "Робоcr",
+        // description: "Lorem ipsum dolor sit amet orem ipsum dolor sit amet orem ipsum dolor sit amet orem ipsum dolor sit amet.",
+        // startDate: '',
+        // endDate: '',
+        // image: "",
+        // place: '',
+        // category_id: Number
+        name: '',
+        description: '',
+        image: '',
         startDate: '',
         endDate: '',
-        image: "",
+        category_id: '',
         place: '',
-        category_id: Number
+        private: 0,
+        organization_event: 0,
+        organization_id: localStorage.organizationId,
       },
       editBtn: 'Edit',
       isDisabled: true
     }
   },
   methods:{
+    setCategory(params){
+      console.log('cat', params.category)
+      this.currentEvent.category_id = params.category
+    },
     // getCurrentEvent(){
     //   console.log('getting...')
     //   fetch('/api/get-current-event-by-id?user=admin').then(res=>{
@@ -100,17 +130,22 @@ export default {
         if(this.$root.pictureUrl  != ''){
           this.currentEvent.image = this.$root.pictureUrl 
         }
-        fetch(`/api/update-event`, {
-          credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
-          method: 'POST',              // метод POST 
-          body: JSON.stringify(this.currentEvent),  // типа запрашиаемого документа
-          headers: new Headers({
-            'Content-Type': 'application/json',
-            'Token': localStorage.hash
-          }),
-        }).then(res=>{
+        putEvent(this.currentEvent).then(res=>{
           console.log(res)
+        }).catch(err=>{
+          console.log(err)
         })
+        // fetch(`/api/update-event`, {
+        //   credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
+        //   method: 'POST',              // метод POST 
+        //   body: JSON.stringify(this.currentEvent),  // типа запрашиаемого документа
+        //   headers: new Headers({
+        //     'Content-Type': 'application/json',
+        //     'Token': localStorage.hash
+        //   }),
+        // }).then(res=>{
+        //   console.log(res)
+        // })
       }
     },
     formHandler(){
@@ -148,6 +183,8 @@ export default {
     this.currentEventRequests.getCurrentEvent().then(event=>{
       console.log('requested event', event)
        this.currentEvent = event;
+       this.currentEvent.private = parseInt(this.currentEvent.private)
+       this.currentEvent.organization_event = parseInt(this.currentEvent.organization_event)
        this.$root.currentEvent = event.id;
     })
 

@@ -27,6 +27,14 @@ function getUsers(req, res){
     //     res.json(data);
     // })
 }
+function getAdmins(req, res){
+    getRequest(`http://yaem.store/robo/users/userCredentalsInfo.php?role=${req.query.role}`, req.headers.token).then(data=>{
+        console.log(data)
+        res.json(data)
+    }).catch(err=>{
+        res.json(err);
+    })
+}
 function getUserById(req, res){
     console.log('getting user.')
     getRequest(`http://yaem.store/robo/users/userCredentalsInfo.php?id=${req.query.userId}`, req.headers.token).then(data=>{
@@ -46,6 +54,14 @@ function createUser(req, res){
         organization_id: req.body.organization_id,
         login: req.body.login,
         password: req.body.password,
+        bio: req.body.bio,
+        web_link: req.body.web_link,
+        role: req.body.role,
+        organization_id: req.body.organization_id,
+        organization_verify: req.body.organization_verify,
+        phone:  req.body.phone,
+        current_event: null
+        
     }
     
     console.log('this data I will send: ', data);
@@ -82,6 +98,13 @@ function updateUser(req, res){
         organization_id: req.body.organization_id,
         login: req.body.login,
         password: req.body.password,
+        
+        role: req.body.role,
+        current_event: req.body.current_event,
+        organization_verify: req.body.organization_verify,
+        phone: req.body.phone,
+        bio: req.body.bio,
+        web_link: req.body.web_link
     }
     
     console.log('this data I will send: ', data);
@@ -134,6 +157,7 @@ function deleteUser(req, res){
 }
 export{
     getUsers, 
+    getAdmins,
     getUserById,
     createUser, 
     updateUser,

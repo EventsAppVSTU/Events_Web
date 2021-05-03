@@ -1,14 +1,18 @@
 <template>
   
-    <select class="form-select circleButton" aria-label="Default select example" @change="changeSelectedCommunity($event)">
+  <div>
+    <!-- <p>{{currentCategory}}</p> -->
+    <select class="form-select circleButton" aria-label="Default select example" @change="changeSelectedCommunity($event)" :disabled="disabled">
       <!--   -->
-        <option :selected="category.id == selectedCategory"
+        <option 
+                :selected="category.id == selectedCategory"
                 :value="category.id" v-for="(category) in categories" 
                 :key="category.id"> 
-                    {{category.name}}
+                    {{category.name}} {{category.id}}
         </option>
 
     </select>
+  </div>
   
 </template>
 
@@ -21,19 +25,26 @@ export default {
   name: 'CategoriesComboBox',
   props: {
     msg: String,
-    currentCategory: Number
+    currentCategory: null,
+    disabled: Boolean
   },
   data(){
     return {
       categories: {},
-      selectedCategory: ''
+      selectedCategory: '',
     }
   },
   methods:{
     loadOptions(){
+      console.log('get from component ', this.currentCategory)
+      // // if(this.currentCategory != undefined){
+      //   console.log('category id ', parseInt(this.currentCategory))
+      //   this.selectedCategory = this.currentCategory
+      // // }
       getCategories().then(data=>{
           console.log(data.data.objects[0].id)
             this.categories = data.data.objects;
+            console.log('get current event ', this.currentCategory)
             // this.selectedCategory = data.data.objects[0].id
             this.$emit('categorySelected', {category: this.selectedCategory})
         }).catch(err=>{
@@ -48,12 +59,16 @@ export default {
     }
   },
   mounted(){
+    console.log('get from component ', this.currentCategory)
     this.loadOptions()
-    if(this.currentCategory != undefined){
-      console.log('definded')
-      this.selectedCategory = this.currentCategory
-    }
-    console.log('Undefinded')
+    // if(this.currentCategory != undefined){
+      //   console.log('definded')
+    // }
+    // console.log('Undefinded')
+    setTimeout(() => {
+      console.log(this.currentCategory.category_id)
+      this.selectedCategory = this.currentCategory.category_id
+    }, 2000);
   }
 }
 </script>

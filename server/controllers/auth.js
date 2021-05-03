@@ -4,10 +4,10 @@ import fetch from 'node-fetch';
 import {getRequest, postRequest, putReguest, deleteRequest} from '../helpers/request.js'
 
 function signIn(req, res){
-    console.log('AUTH', `http://yaem.store/robo/users/userCredentalsInfo.php?login=${req.body.login}&password=${req.body.password}`)
+    console.log('AUTH', `http://yaem.store/robo/users/userCredentals.php?login=${req.body.login}&password=${req.body.password}`)
 
     
-    fetch(`http://yaem.store/robo/users/userCredentalsInfo.php?login=${req.body.login}&password=${req.body.password}`, {
+    fetch(`http://yaem.store/robo/users/userCredentals.php?login=${req.body.login}&password=${req.body.password}`, {
 
         'Content-Type': 'application/json',
         'Accept': 'application/json',
