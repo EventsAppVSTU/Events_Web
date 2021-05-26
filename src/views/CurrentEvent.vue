@@ -4,12 +4,16 @@
         <form  @submit.prevent="formHandler"  id="createEventForm" >
         
           <h2 class="current-event_header">
+              <svg class="feather" v-if="currentEvent.private == 1">
+                <use xlink:href="@/assets/feather-sprite.svg#lock"/>
+              </svg>
               <input type="text"  v-model="currentEvent.name" name="name" placeholder="Название" id="name" :disabled="isDisabled">
               <div class="current-event_settings">
                 <button class="btn btn-outline-success btn-sm" v-on:click="edit()" id="editBtn">{{editBtn}}</button>
                 <button class="btn btn-outline-danger btn-sm" v-on:click="deleteCurrentEvent()">Delete</button>
               </div>
           </h2>
+          
           <div class="event-card_img-container">
               <img v-if="$root.pictureUrl != ''" :src="$root.pictureUrl" alt="">
               <img v-else :src="currentEvent.image" alt="">
@@ -130,8 +134,12 @@ export default {
         if(this.$root.pictureUrl  != ''){
           this.currentEvent.image = this.$root.pictureUrl 
         }
+        this.currentEvent.organization_event==false?this.currentEvent.organization_event='0':this.currentEvent.organization_event='1' 
+        this.currentEvent.private==false?this.currentEvent.private='0':this.currentEvent.private='1' 
         putEvent(this.currentEvent).then(res=>{
           console.log(res)
+          //Reload sidebar
+          this.$eventBus.$emit('reloadApp')
         }).catch(err=>{
           console.log(err)
         })

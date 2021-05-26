@@ -3,7 +3,7 @@
         <h2>Пользователи</h2>
         <div class="events-toolbar">
           <input type="text" placeholder="Найти..." v-model="searchString"> 
-          <CreateUser />
+          <CreateUser @reloadUsers="getUsers()" />
         </div>
 
         <div v-if="users == ''" class="message-empty-content">
@@ -12,7 +12,9 @@
         </div>
         <div class="data-table" v-else >
           <div class="data-row" v-for="(user, index) in filteredUsers" :key="index">
-            <div class="data-row_number">{{index}}</div>
+            <div class="data-row_number">{{index}}
+              <p>id: {{user.id}}</p>
+            </div>
             <div class="data-row-img">
               <img :src="user.image"  alt="" srcset="" v-if="user.image != '' && user.image != 'null'">
               <img :src="require(`@/assets/Men-Profile-Image.png`)" v-else>
@@ -77,6 +79,13 @@
                     <use xlink:href="@/assets/feather-sprite.svg#globe"/>
                   </svg>
                   <input class="table-display-input table-event-name data-row_content-top_info" type="text" v-model="user.web_link" :disabled="isDisabled!==index">
+                </div>
+
+                <div class="info-block">
+                  <svg class="feather data-row-icons" >
+                    <use xlink:href="@/assets/feather-sprite.svg#globe"/>
+                  </svg>
+                  <input class="table-display-input table-event-name data-row_content-top_info" type="text" v-model="user.organization_verify" :disabled="isDisabled!==index">
                 </div>
 
               </div>
@@ -310,7 +319,8 @@ export default {
       },
       deleteUser(index){
           console.log(index)
-          deleteUser(this.users[index].id).then(data=>{
+          // было - this.users[index].id
+          deleteUser(this.filteredUsers[index].id).then(data=>{
             console.log(data);
             this.getUsers();
           })
@@ -355,19 +365,19 @@ export default {
             }
       },
       setOrganization(params){
-      console.log('cat', params.organization)
-      // console.log('upd user org', this.users[params.index].organization_id)
-      var user  = this.users.filter((item)=>{
-        if(item.id == params.index){
-          return item
+        console.log('cat', params.organization)
+        // console.log('upd user org', this.users[params.index].organization_id)
+        var user  = this.users.filter((item)=>{
+          if(item.id == params.index){
+            return item
+          }
+        })
+        if(user[0] != undefined){
+          console.log('filtered user',user)
+          user[0].organization_id = params.organization
+          console.log('upd user org will be', user[0].organization_id = params.organization)
         }
-      })
-      if(user[0] != undefined){
-        console.log('filtered user',user)
-        user[0].organization_id = params.organization
-        console.log('upd user org will be', user[0].organization_id = params.organization)
-      }
-    },
+      },
     userOrganization(index){
       var orgObject =  this.organizations.filter((item)=>{
         if(item.id == this.filteredUsers[index].organization_id){

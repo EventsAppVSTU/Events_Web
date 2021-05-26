@@ -12,7 +12,8 @@ class EmptyLetter {
 
 
 class AcceptUserOnEventLetter{
-    constructor(name, requestedEvent, code){
+    constructor(name, requestedEvent, code, email){
+        this.email = email
         this.name = name
         this.requestedEvent = requestedEvent
         this.code = code
@@ -20,8 +21,8 @@ class AcceptUserOnEventLetter{
     createLetter(){
         //,vityapopov98@yandex.ru
         return {
-            from: '"Events App ✅ " <vityapopov98@gmail.com>', // sender address
-            to: "", // list of receivers
+            from: '"Events App ✅ " <team.eventsapp@gmail.com>', // sender address
+            to: this.email, // list of receivers
             subject: "Заявка на участие в событии", // Subject line
             text: `
             Ура! Ваша заявка принята. Поздравляем, ${this.name}, вы участник события ${this.requestedEvent}. Ваш код для доступа: ${this.code}  
@@ -34,15 +35,16 @@ class AcceptUserOnEventLetter{
 
 
 class DeclineUserRequestLetter{
-    constructor(name, requestedEvent){
+    constructor(name, requestedEvent, email){
+        this.email = email
         this.name = name
         this.requestedEvent = requestedEvent
     }
     createLetter(){
         //,vityapopov98@yandex.ru
         return {
-            from: '"Events App ✅ " <vityapopov98@gmail.com>', // sender address
-            to: "", // list of receivers
+            from: '"Events App ✅ " <team.eventsapp@gmail.com>', // sender address
+            to: this.email, // list of receivers
             subject: "Заявка на участие в событии", // Subject line
             text: `
             Ваша заявка была отклонена администратором. К сожалению, ${this.name}, Вы не сможете участвовать в мероприятии "${this.requestedEvent}".

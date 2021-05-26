@@ -32,7 +32,7 @@
                 <!-- <input class="table-display-input table-event-name" type="text" v-model="performance.description" :disabled="isDisabled"> -->
                 <h6 v-show="(pressedButtonIndex === index)">Описание</h6>
                 <textarea @input="fixTextareaSize()" rows="5" class="performance-description" name="" id=""  v-show="(pressedButtonIndex === index)" v-model="performance.description" :disabled="isDisabled!==index"></textarea>
-                <iframe  v-show="(pressedButtonIndex === index)" width="560" height="315" src="https://www.youtube.com/embed/rokGy0huYEA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <!-- <iframe  v-show="(pressedButtonIndex === index)" width="560" height="315" src="https://www.youtube.com/embed/rokGy0huYEA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
                 <button v-if="performance.description != undefined" class="news-button-more"  v-on:click="expandThisNews(index)">
                   More <svg class="feather" :class="{'rotate-news-arrow': pressedButtonIndex === index}">
                           <use xlink:href="@/assets/feather-sprite.svg#chevron-right"/>

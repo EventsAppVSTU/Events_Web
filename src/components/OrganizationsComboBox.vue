@@ -41,8 +41,8 @@ export default {
       getOrganizations().then(data=>{
           console.log(data.data.objects[0].id)
             this.organizations = data.data.objects;
-            console.log('get current event ', this.currentOrganization)
-            // this.selectedOrganization = data.data.objects[0].id
+            console.log('get organization ', this.currentOrganization)
+            this.selectedOrganization = data.data.objects[0].id //было закоменченно
             this.$emit('organizationSelected', {organization: this.selectedOrganization})
         }).catch(err=>{
           console.log(err)

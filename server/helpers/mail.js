@@ -1,11 +1,13 @@
 
 import nodemailer from 'nodemailer'
 
+// team.eventsapp@gmail.com
+// 
 // create reusable transporter object using the default SMTP transport
 let transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'vityapopov98@gmail.com', // generated ethereal user
+    user: 'team.eventsapp@gmail.com', // generated ethereal user
     pass: '', // generated ethereal password
   },
 });
@@ -15,8 +17,8 @@ class Letter {
   constructor (letter){
     //gimly99@mail.ru,
     // console.log('Letter constructor', letter)
-    this.from ='"Events App ✅ " <vityapopov98@gmail.com>' // sender address
-    this.to = "vityapopov98@yandex.ru" // list of receivers
+    this.from ='"Events App ✅ " <team.eventsapp@gmail.com>' // sender address
+    this.to = `${letter.to}, vityapopov98@yandex.ru, team.eventsapp@gmail.com`//"vityapopov98@yandex.ru" // list of receivers
     this.subject =  letter.subject // Subject line
     this.text = letter.text // plain text body
     this.html = letter.html // html body

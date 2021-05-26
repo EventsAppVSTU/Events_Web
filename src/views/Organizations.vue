@@ -1,6 +1,6 @@
 <template>
   <div class="Organizations">
-        <h2>Organizations</h2>
+        <h2>Организации</h2>
         <form id="#per" class="performance-form">
           <input type="text" class="performance-add" placeholder="name" name="name" v-model="org.name">
           <button class="btn btn-outline-danger btn-rounded" type="submit" v-on:click="createOrganization()">+ Create</button>

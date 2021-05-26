@@ -8,13 +8,19 @@
             <h2 class="logoText">Events App</h2>
           </div>
             <div class="header-right-side">
+
+              <div class="user-profile">
+                {{userAdmin.name}} {{userAdmin.surname}}
+              </div>
+
               <button href="" class="btn " id="menu-toggle" v-on:click="toggleMenu()">
                 <svg class="feather">
                     <use xlink:href="@/assets/feather-sprite.svg#menu"/>
                 </svg>
                 
               </button>
-              <button v-if="currentEvent.id != undefined" v-on:click="logOut()" class="textBtn" >
+              <!-- v-if="currentEvent.id != undefined" -->
+              <button v-if="userAdmin != ''" v-on:click="logOut()" class="textBtn" >
                 <svg class="feather">
                     <use xlink:href="@/assets/feather-sprite.svg#log-out"/>
                 </svg>
@@ -37,8 +43,7 @@
             <div class="container-fluid">
             <div class="row">
                 <div class="col-md-2" >
-                    <ul id="sidebar-nav" class="s-hidden">
-                        
+                    <ul id="sidebar-nav" class="s-hidden">                        
                         <ul class="nav flex-column">
                           <div v-if="userRole != 2">
 
@@ -63,54 +68,61 @@
                             <li>
                               <hr>
                             </li>
-                            <li class="nav-item">
-                              <span class="nav-link currentEventMenu">
-                                <router-link to="/currentEvent">
-                                <svg class="feather">
-                                    <use xlink:href="@/assets/feather-sprite.svg#home"/>
-                                </svg>
-                                {{currentEvent.name}}
-                                </router-link>
-                              </span>
-                            </li>
-                            <li class="nav-item">
-                              <span class="nav-link">
-                              
-                                <router-link to="/event-news"> 
-                                <svg class="feather">
-                                    <use xlink:href="@/assets/feather-sprite.svg#layout"/>
-                                </svg>
-                                Новости</router-link>
-                              </span>
-                            </li>
-                            <li class="nav-item">
-                              <a class="nav-link" href="#">
+                            <div v-if="currentEvent != undefined">
+                              <li class="nav-item">
+                                <span class="nav-link currentEventMenu">
+                                  <router-link to="/currentEvent">
+                                  <svg class="feather">
+                                      <use xlink:href="@/assets/feather-sprite.svg#home"/>
+                                  </svg>
+                                  {{currentEvent.name}}
+                                  </router-link>
+                                </span>
+                              </li>
+                            
+                              <li class="nav-item">
+                                <span class="nav-link">
                                 
-                                <router-link to="/performances">
-                                <svg class="feather">
-                                    <use xlink:href="@/assets/feather-sprite.svg#calendar"/>
-                                </svg>
-                                Расписание</router-link>
-                              </a>
-                            </li>
-                            <li class="nav-item">
-                              <a class="nav-link" href="#">
-                                 <router-link to="/chosenPerformances">
-                                 <svg class="feather">
-                                    <use xlink:href="@/assets/feather-sprite.svg#bookmark"/>
-                                 </svg>
-                                 Выбранные секции</router-link>
-                              </a>
-                            </li>
-                            <li class="nav-item" v-if="currentEvent.private == 1">
-                              <a class="nav-link" href="#">
-                                 <router-link to="/privateEventAccept">
-                                 <svg class="feather">
-                                    <use xlink:href="@/assets/feather-sprite.svg#lock"/>
-                                 </svg>
-                                 Заявки на событие</router-link>
-                              </a>
-                            </li>
+                                  <router-link to="/eventNews"> 
+                                  <svg class="feather">
+                                      <use xlink:href="@/assets/feather-sprite.svg#layout"/>
+                                  </svg>
+                                  Новости</router-link>
+                                </span>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                  
+                                  <router-link to="/performances">
+                                  <svg class="feather">
+                                      <use xlink:href="@/assets/feather-sprite.svg#calendar"/>
+                                  </svg>
+                                  Расписание</router-link>
+                                </a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                  <router-link to="/chosenPerformances">
+                                  <svg class="feather">
+                                      <use xlink:href="@/assets/feather-sprite.svg#bookmark"/>
+                                  </svg>
+                                  Выбранные секции</router-link>
+                                </a>
+                              </li>
+                              <li class="nav-item" v-if="currentEvent.private == 1">
+                                <a class="nav-link" href="#">
+                                  <router-link to="/privateEventAccept">
+                                  <svg class="feather">
+                                      <use xlink:href="@/assets/feather-sprite.svg#lock"/>
+                                  </svg>
+                                  Заявки на событие</router-link>
+                                </a>
+                              </li>
+                            </div>
+                            <div v-else>
+                              <!-- <p>Выбирите событие,<br> чтобы управлять связанными<br> с ним данными</p> -->
+                              <p>Событие не установленно</p>
+                            </div>
                             <li>
                               <hr>
                             </li>
@@ -128,6 +140,7 @@
                               </a>
                             </li>
 
+<!-- /bidsStates -->
                             <div v-if="userRole == 2">
                               <li class="nav-item">
                                 <a class="nav-link" href="#">
@@ -148,11 +161,18 @@
                                   Категории</router-link>
                                 </a>
                               </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                  <router-link to="/bidsStates">
+                                    <svg class="feather">
+                                        <use xlink:href="@/assets/feather-sprite.svg#loader"/>
+                                    </svg>
+                                  Статусы заявок</router-link>
+                                </a>
+                              </li>
                             </div>
                             
-                            
-                          </ul>
-                          
+                          </ul>   
                         
                     </ul>
                 </div>
@@ -199,20 +219,32 @@ export default {
   methods:{
     loadPage(){
       this.userRole = localStorage.userRole
-      // if(this.userRole != undefined){
-        console.log('user id', localStorage.userId)
-        getUserById(localStorage.userId).then(data=>{
-          this.userAdmin = data.data.objects[0]
-        })
-        getCurrentEvent().then(data=>{
-            console.log('requested event', data)
+      
+        // console.log('user id', localStorage.userId)
+        // getUserById(localStorage.userId).then(data=>{
+        //   this.userAdmin = data.data.objects[0]
+        // })
+        // getCurrentEvent().then(data=>{
+        //     console.log('requested event', data)
+        //     this.currentEvent = data.data.objects[0];
+        //     this.loading = false
+        // })
+        if(this.userRole != undefined){
+          getUserById(localStorage.userId).then(data=>{
+            this.userAdmin = data.data.objects[0]
+            console.log('Пользователь', this.userAdmin)
+          })
+          getCurrentEvent().then(data=>{
+            console.log('текущее событие пользователя', data)
             this.currentEvent = data.data.objects[0];
+            if(this.currentEvent == ''){
+              console.log('Нет событий')
+            }
             this.loading = false
-        })
-      // }
-      // else{
-      //   console.log('user id', localStorage.userId)
-      // }
+          })
+          this.loading = false
+        }
+      
       
     },
     reloadPage(){
@@ -220,16 +252,7 @@ export default {
       this.loading = true
       
       setTimeout(() => {
-        if(this.userRole != undefined){
-          getUserById(localStorage.userId).then(data=>{
-            this.userAdmin = data.data.objects[0]
-          })
-          getCurrentEvent().then(data=>{
-            console.log('requested event', data)
-            this.currentEvent = data.data.objects[0];
-            this.loading = false
-          })
-        }
+        this.loadPage()
         
       }, 500);   
     },
@@ -246,7 +269,7 @@ export default {
       localStorage.userRole = ''
       this.$root.isAuth = false
       this.$router.push('login')
-      this.currentEvent.id = undefined
+      if(this.currentEvent !=undefined){ this.currentEvent.id = undefined }
       this.userAdmin = ''
     },
   },

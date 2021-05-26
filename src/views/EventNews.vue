@@ -11,19 +11,17 @@
   <p>Добавьте новость, нажав на кнопку "+ Create"</p>
 </div>
 
-    <div class="event-card" v-for="(newsCard, index) in filteredNews" :key="newsCard.name">
+    <div class="event-card" v-for="(newsCard, index) in filteredNews" :key="index">
       <hr class="event-card_hr">
-      <div v-if="newsCard.image" class="event-card_img-container" v-on:click="setCurrentEvent(eventCard.id)">
+      <div v-if="newsCard.image" class="event-card_img-container" >
         <img  :src="newsCard.image" alt="">
       </div>
-      <!-- <div class="news-sm-avatar">
 
-      </div> -->
       <div class="card-body">
         <div class="news-header">
           <h2>{{newsCard.name}}</h2>
-          <!-- <button class="btn btn-outline-danger" @click="deleteNews(index)">delete</button> -->
-          <button @click="deletePerformance(index)" class="card-delete-button">
+          
+          <button @click="deleteNews(index)" class="card-delete-button">
               <svg class="feather">
                   <use xlink:href="@/assets/feather-sprite.svg#trash"/>
               </svg>
@@ -41,6 +39,8 @@
 </template>
 
 <script>
+import {getNews, deleteNews} from '../requests/eventNews'
+import {getCurrentEvent} from '../requests/currentEvent'
 export default {
   name: 'EventNews',
   props: {
@@ -61,104 +61,52 @@ export default {
         description: "Lorem ipsum dolor sit amet orem ipsum dolor sit amet orem ipsum dolor sit amet orem ipsum dolor sit amet.",
         image: "@/assets/nasa-Q1p7bh3SHj8-unsplash.jpg",
       }],
+      currentEvent: {},
       searchString: '',
       pressedButtonIndex: ''
     }
   },
   methods:{
       loadNews: function(){
-            console.log('loading..')
-            var currentEvent = this.$root.currentEvent;
-            fetch(`/api/event-news?event_id=${currentEvent}`, {
-            headers : { 
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Token': localStorage.hash
-            }
-            }).then(res=>{
-              console.log('here news')
-                  if(res.ok){
-                      var data = res.json();
-                      console.log(data);
-                      return data;
-                  }
-                  else{
-                      console.log('er get rooms :(');
-                      throw new Error ('er');
-                  }
-              }).then(data=>{
-                  console.log(data.data.objects);
-                  this.newsCards = data.data.objects;
-              })
-        },
-        expandThisNews(newsIndex){
-            if (this.pressedButtonIndex === '') {
-              this.pressedButtonIndex = newsIndex;
-            }
-            else{
-              this.pressedButtonIndex = ''
-            }
 
-        },
-        deleteNews(index){
-          var answer = confirm()
-          if (answer){
-            var data ={
-              id: this.newsCards[index].id
-            }
-            fetch(`/api/delete-event-news`, {
-              credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
-              method: 'POST',              // метод POST 
-              body: JSON.stringify(data),  // типа запрашиаемого документа
-              headers: new Headers({
-                'Content-Type': 'application/json',
-                'Token': localStorage.hash
-              }),
-            }).then(res=>{
-              return res.json()
-            }).then(data=>{
-              console.log(data)
-              this.loadNews()
-            })
+          getNews(this.currentEvent.id).then(data=>{
+            this.newsCards = data.data.objects
+          }).catch(err=>{
+            console.log(err)
+          })
+      },
+      expandThisNews(newsIndex){
+          if (this.pressedButtonIndex === '') {
+            this.pressedButtonIndex = newsIndex;
           }
-        },
-//         getCurrentEvent(){
-// // из currentEvent
-          
-//       console.log('getting...')
-//       return new Promise((resolve, reject)=>{
-//         fetch('/api/get-current-event-by-id?user=admin').then(res=>{
-//               if(res.ok){
-//                   var data = res.json();
-//                   console.log('OK')
-//                   return data;
-//               }
-//               else{
-//                   console.log('er get rooms :(');
-//                   throw new Error ('er');
-//               }
-//           }).then(data=>{
-//               console.log('current event data',data.data.objects[0])
-//               this.currentEvent = data.data.objects[0];
-//               this.$root.currentEvent = data.data.objects[0].id;
-//               resolve('ok')
-//           }).catch(error=>{
-//             reject(error)
-//           })
+          else{
+            this.pressedButtonIndex = ''
+          }
 
-//       })
-//     }
+      },
+      deleteNews(index){
+          
+        var answer = confirm()
+        if (answer){
+          console.log('before deleted', this.filteredNews[index])
+          deleteNews(this.filteredNews[index].id).then(()=>{
+            console.log('Should be deleted')
+            this.loadNews()
+          }).catch(err=>{
+            console.log(err)
+          })
+        }
+      },
   },
   mounted(){
 
-    this.currentEventRequests.getCurrentEvent().then(event=>{
-      this.currentEvent = event;
-      this.$root.currentEvent = event.id;
-      this.loadNews()
-    })
-    // this.getCurrentEvent().then(()=>{
-    //   this.loadNews();
-    // })
+     getCurrentEvent().then(data=>{
+        console.log('Событие текущее записываем новости', data.data.objects[0]  )
+        this.currentEvent = data.data.objects[0]
+        this.loadNews()
+      }).catch(err=>{
+        console.log(err)
+      })
   },
   computed: {
     filteredNews: function(){

@@ -8,8 +8,9 @@
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
+  <div class="modal-dialog modal-dialog-centered" role="document"  >
+
+    <div class="modal-content" v-if="!performanceSaved">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLongTitle">Создать выступление</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -27,7 +28,7 @@
             <input type="text" class="performance-add" placeholder="Время начала ЧЧ:ММ" name="startTime"  v-model="perf.startTime">
             <input type="text" class="performance-add" placeholder="Время конца ЧЧ:ММ" name="time" v-model="perf.endTime">
             <input type="text" class="performance-add" placeholder="Ведущий" name="speaker" v-model="perf.speaker">
-            <textarea @input="fixTextareaSize()" rows="5" cols="" class="" name="" id="" placeholder="Описание" v-model="perf.description"></textarea>
+            <textarea  rows="5" cols="" class="" name="" id="" placeholder="Описание" v-model="perf.description"></textarea>
           </div>
           <button class="btn btn-outline-danger btn-rounded" v-on:click="createPerformance()">+ Create</button>
         </form>
@@ -37,13 +38,35 @@
         <button type="button" class="btn btn-primary" @click="createPerformance()">Save changes</button>
       </div> -->
     </div>
+
+  <div class="container" v-else>
+    <div class="done-box">
+      <!-- <svg class="feather fs-1">
+        <use xlink:href="@/assets/feather-sprite.svg#check-circle"/>
+      </svg> -->
+      <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </symbol>
+        
+      </svg>
+      <svg class="bi flex-shrink-0 me-2" width="32" height="32"><use xlink:href="#check-circle-fill"/></svg>
+      <h2 class="text-">Готово</h2>
+
+    </div>
   </div>
+  </div>
+  
+    
 </div>
 </div>
   
 </template>
 
 <script>
+
+import {postPerformance} from '../requests/performances'
+
 export default {
   name: 'CreatePerformance',
   props: {
@@ -60,29 +83,27 @@ export default {
         speaker: '',
         event_id: ''
       },
+      performanceSaved: false
     }
   },
   methods:{
     createPerformance(){
       this.perf.event_id = this.event_id;
       if(this.perf.name){
-        
-        fetch(`/api/create-performance-by-id`, {
-        credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
-        method: 'POST',              // метод POST 
-        body: JSON.stringify(this.perf),  // типа запрашиаемого документа
-        headers: new Headers({
-          'Content-Type': 'application/json'
-        }),
-      })
-      .then(response => {
-        return response // возвращаем промис
+        postPerformance(this.perf).then(data=>{
+          console.log(data)
+          this.perf.name = ''
+          this.perf.datePerf = ''
+          this.perf.description = ''
+          this.perf.startTime = ''
+          this.perf.endTime = ''
+          this.perf.speaker = ''
+          this.perf.event_id = ''
 
-      }).then(json=>{
-        console.log('succsess ', json)
-        // this.updatePerformancesTable()
-        this.$emit('updatePerfTable')
-      })
+          this.performanceSaved = true
+          this.$emit('updatePerfTable')
+        })
+
       }
       
     },
@@ -92,6 +113,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.done-box{
+  background-color: white;
+  padding: 3rem;
+  border-radius: 1rem;
+  text-align: center;
+}
+
 .performance-form{
   width: 100%;
   padding: 1rem 0;

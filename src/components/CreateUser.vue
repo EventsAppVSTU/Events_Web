@@ -24,15 +24,18 @@
           </div>
           <div class="performance-form_header">
             <input type="text" class="performance-add" placeholder="Логин" name="login"  v-model="usr.login">
+            <small id="emailHelp" class="form-text  text-danger" :class="{'invalid-feedbak': displayError}">{{errorMessage}}</small>
             <input type="text" class="performance-add" placeholder="Пароль" name="password"  v-model="usr.password">
           </div>
           <div class="performance-form_info">
             <input type="text" class="performance-add" placeholder="Телефон" name="startTime"  v-model="usr.phone">
             <input type="text" class="performance-add" placeholder="Ссылка" name="Сс" v-model="usr.web_link">
-            <!-- <OrganizationsComboBox @organizationSelected="setOrganization" /> -->
+            
+              <OrganizationsComboBox @organizationSelected="setOrganization" v-if="userRole == 2" />
+            
             <textarea rows="5" cols="" class="" name="" id="" placeholder="Личная информация. Bio" v-model="usr.bio"></textarea>
           </div>
-          <button class="btn btn-outline-danger btn-rounded" v-on:click="createUser()">+ Create</button>
+          <button class="btn btn-outline-danger btn-rounded" v-on:click="createUser($event)">+ Create</button>
         </form>
       </div>
     </div>
@@ -43,7 +46,7 @@
 </template>
 
 <script>
-// import OrganizationsComboBox from '../components/OrganizationsComboBox'
+import OrganizationsComboBox from '../components/OrganizationsComboBox'
 import {postUser} from '../requests/users'
 
 export default {
@@ -52,19 +55,19 @@ export default {
     event_id: null
   },
   components:{
-    // OrganizationsComboBox
+    OrganizationsComboBox
   },
   data (){
     return {
-      perf: {
-        name: '',
-        datePerf: '',
-        description: '',
-        startTime: '',
-        endTime: '',
-        speaker: '',
-        event_id: ''
-      },
+      // perf: {
+      //   name: '',
+      //   datePerf: '',
+      //   description: '',
+      //   startTime: '',
+      //   endTime: '',
+      //   speaker: '',
+      //   event_id: ''
+      // },
             usr:{
               name: '',
               surname: '',
@@ -82,13 +85,18 @@ export default {
         // organization_verify: req.body.organization_verify,
         // phone: req.body.phone,
         // bio: req.body.bio
-        }
+        },
+        userRole: localStorage.userRole,
+        displayError: false,
+        errorMessage: ''
     }
   },
   methods:{
-    createUser(){
+    createUser(event){
       console.log('creating user')
-      this.perf.event_id = this.event_id;
+      if (event) {
+        event.preventDefault()
+      }
       if(this.usr.name){
         
         if(localStorage.userRole == 1){ //Admin создает обычных пользователей
@@ -100,23 +108,36 @@ export default {
         // this.usr.organization_verify = '1'
         postUser(this.usr).then(data=>{
           console.log('post user', this.usr)
-          console.log(data)
+          console.log('данные ', data)
+          console.log('data.status ', data.status)
+          
+          if(data.status == 'error'){
+            console.log('дата статус', data.status)
+            this.displayError= true
+            this.errorMessage = data.data.message
+          }
+          else{ 
+            this.displayError = false
+            this.$emit('reloadUsers')  
+          }
         }).catch(err=>{
           console.log(err)
         })
       }
-      
     },
 
-    // Админ может создавать пользователлей для своей организации
-    // setOrganization(params){
-    //     console.log('cat', params.organization) 
-    //       this.usr.organization_id = params.organization
-    //       console.log('upd user org will be', this.usr.organization_id = params.organization)  
-    // },
+    // Админ может создавать только пользователлей для своей организации
+    // Супервайзер создает админов для любой организации
+    setOrganization(params){
+        console.log('cat', params.organization) 
+          this.usr.organization_id = params.organization
+          console.log('upd user org will be', this.usr.organization_id = params.organization)  
+    },
   },
   mounted(){
-    this.usr.organization_id = localStorage.organizationId
+    if(localStorage.userRole == 1){//Admin
+      this.usr.organization_id = localStorage.organizationId
+    }
   }
 }
 </script>

@@ -63,11 +63,11 @@ function createNews(req, res){
 }
 
 function deleteEventNews(req, res){
-    if(req.body.id != undefined){
+    if(req.query.id != undefined){
         //удалить текущие событие у админа
     //Удалить событие
         console.log('will delete')
-        deleteRequest(`http://yaem.store/robo/events/eventNews.php?id=${req.body.id}`, req.headers.token).then(data=>{
+        deleteRequest(`http://yaem.store/robo/events/eventNews.php?id=${req.query.id}`, req.headers.token).then(data=>{
             res.json(data)
         }).catch(err=>{
             res.json(err)

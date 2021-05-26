@@ -14,7 +14,7 @@ import ChosenEvents from '../views/ChosenEvents.vue'
 import ChosenPerformances from '../views/ChosenPerformances.vue'
 import PrivateEventAccept from '../views/PrivateEventAccept.vue'
 import Login from '../views/Login.vue'
-// import { format } from 'core-js/fn/date'
+import BidsStates from '../views/BidsStates.vue'
 
 // import Store from '../store'
 // import requests from '../requests'  //Запросы
@@ -46,7 +46,7 @@ Vue.use(VueRouter)
     }
   },
   {
-    path: '/event-news',
+    path: '/eventNews',
     name: 'EventNews',
     component: EventNews,
     meta: {
@@ -137,6 +137,14 @@ Vue.use(VueRouter)
     path: '/privateEventAccept',
     name: 'PrivatEventAccept',
     component: PrivateEventAccept,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/bidsStates',
+    name: 'BidsStates',
+    component: BidsStates,
     meta: {
       requiresAuth: true
     }

@@ -1,27 +1,29 @@
 <template>
   <div class="createEvent">
     <div class="current-event">
-        <form   action="/api/create-news" method="POST" id="createNewsForm" >
+        <!-- <form   action="/api/create-news" method="POST" id="createNewsForm" > -->
           <h2 class="current-event_header">
-              <input type="text" value="" name="name" placeholder="Название новости" id="name">
+              <input type="text" v-model="createdNews.name" placeholder="Название новости" id="name">
           </h2>
           <div class="event-card_img-container">
               <!-- <input type="file" name="image" id="image"> -->
               <!-- <label for="photo">Выбирите фото</label> -->
-              <img :src="newsImage" alt="">
+              <img :src="createdNews.image" alt="">
           </div>
-             <input type="text" name="image" id="image" v-model="newsImage">
+             <input type="text" name="image" id="image" v-model="createdNews.image">
+          <p>{{createdNews.event_id}}</p>
           <h3 class="current-event_decription-header">Описание</h3>
-          <textarea name="description" id="description" cols="30" rows="10" placeholder="Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias suscipit totam quis ab saepe dolore aliquid provident quas aliquam cupiditate nobis doloremque porro ut eum dolorem architecto unde, repudiandae corporis."></textarea>
-          <input type="text" class="d-none" v-model="currentEvent.id" name="event_id">
-          <button type="submit" class="btn btn-outline-danger btn-rounded" v-on:click="createEvent()">Save button</button>
-        </form>
+          <textarea name="description" id="description" cols="30" rows="10" placeholder="Введите описание новости..." v-model="createdNews.description"></textarea>
+          <!-- <input type="text" class="d-none" v-model="" name="event_id"> -->
+          <button type="submit" class="btn btn-outline-danger btn-rounded" v-on:click="createNews()">Сохранить новость</button>
+        <!-- </form> -->
     </div>
   </div>
 </template>
 
 <script>
-
+import {postNews} from '../requests/eventNews'
+import {getCurrentEvent} from '../requests/currentEvent'
 
 export default {
   name: 'CreateEvent',
@@ -30,52 +32,36 @@ export default {
   },
   data: function(){
     return{
-      currentEvent: {
-        id: 1, 
-        name: "Робоcr",
-        description: "Lorem ipsum dolor sit amet orem ipsum dolor sit amet orem ipsum dolor sit amet orem ipsum dolor sit amet.",
-        startDate: '',
-        endDate: '',
-        image: "@/assets/nasa-Q1p7bh3SHj8-unsplash.jpg",
-        place: '',
-        category_id: Number
+      currentEvent: {},
+      createdNews:{
+        event_id: Number,
+        name: "",
+        description: "",
+        image: "",
       },
       newsImage: ''
     }
   },
   methods:{
-    createEvent(){
+    createNews(){
       // взять данные с формы
       console.log('werwer')
-
-      // установить созданное событие как текущее
-    },
-    getCurrentEvent(){
-      console.log('getting...')
-      fetch('/api/get-current-event-by-id?user=admin',
-      {
-        headers:{
-          'Token': localStorage.hash
-        }
-      }).then(res=>{
-            if(res.ok){
-                var data = res.json();
-                console.log('OK')
-                return data;
-            }
-            else{
-                console.log('er get rooms :(');
-                throw new Error ('er');
-            }
-        }).then(data=>{
-            console.log('current event data',data.data.objects[0])
-            this.currentEvent = data.data.objects[0];
-        })
+      postNews(this.createdNews).then(data=>{
+        console.log(data)
+        this.$router.replace('eventNews')
+      }).catch(err=>{
+        console.log(err)
+      })
     }
   },
   mounted(){
-    //get current event id
-    this.getCurrentEvent()
+    getCurrentEvent().then(data=>{
+      console.log('Событие текущее записываем новости', data.data.objects[0]  )
+      this.currentEvent = data.data.objects[0]
+      this.createdNews.event_id = this.currentEvent.id
+    }).catch(err=>{
+      console.log(err)
+    })
   }
 }
 </script>

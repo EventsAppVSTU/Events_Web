@@ -1,22 +1,39 @@
 <template>
   <div class="createEvent">
     <!-- <div class="private-event"> -->
-        <h2>Private Event</h2>
-        <div class="card-container">
+        <h2>Заявки на событие</h2>
+        <select class="form-select circleButton" aria-label="Default select example" @change="changeSelectedOrganization($event)">
+            <option :selected="displayMode">принято</option>
+            <option>подтверждено</option>
+            <option>отклонено</option>
+            <option>активировано</option>
+        </select>
 
-          <div class="data-card" v-for="(user, index) in usersRequest" :key="index">
+        <div v-if="filteredBids == ''" class="message-empty-content">
+          <h5>Нет заявок</h5>
+          <p>Тут появятся заявки на участие в событии от пользователей</p>
+        </div>
+
+        <div class="card-container">
+          <div class="data-card" v-for="(user, index) in filteredBids" :key="index">
               <div class="data-row_content">
                 <div class="data-card_content_user-block">
                   <div class="data-card_content_user-block-avatar">
-                    <img :src="user.image" alt="">
+                    <!-- <img :src="user.image" alt=""> -->
+                    <img :src="user.event_image" alt="">
                   </div>
                   <div class="data-card_content_user-block-user">
-                    <h5>{{user.name + ' '+ user.surname}}</h5>
-                    <p>{{user.login}}</p>
+                    <!-- <h5>{{user.name + ' '+ user.surname}}</h5> -->
+                    <h5>{{user.user_name}}</h5>
+                    <!-- <p>{{user.login}}</p> -->
+                    <p>id: {{user.id}}</p>
+                    <p>login: {{user.login}}</p>
+                    <p>статус заявки: {{user.state_name}}</p>
                   </div>
                 </div>
                 <span>хочет записаться на событие</span>
-                <p class="data-card-p">{{user.requestedEvent}}</p>
+                <!-- <p class="data-card-p">{{user.requestedEvent}}</p> -->
+                <p class="data-card-p">{{user.event_name}}</p>
                 <button  class="btn btn-outline-success mx-1" @click="acceptUserOnEvent(user, index)">Accept</button>
                 <button  class="btn btn-outline-danger" @click="declineUser(user, index)">Decline</button>
               </div>            
@@ -28,12 +45,29 @@
 </template>
 
 <script>
+import {getUserRequests} from '../requests/privateEvents'
+import {getCurrentEvent} from '../requests/currentEvent'
+// import { getUserById } from '../requests/users'
 
 export default {
   name: 'PrivateEventAccept',
   data: function(){
     return {
-      usersRequest: [{
+      usersRequests: [
+        {
+            code: "",
+            event_id: "1",
+            event_image: "https://source.unsplash.com/mAwE-fqgDXc",
+            event_name: "Умный дом GreenZone",
+            id: "1",
+            state_id: "1",
+            state_name: "принято",
+            user_id: "1",
+            user_name: "2021 3!!! МАРТ!!!",
+            login: ''
+          },
+
+        {
               id: 1,
               name: 'Иван',
               surname: 'Иванов',
@@ -140,7 +174,9 @@ export default {
 
         ],
       editBtn: 'Edit',
-      isDisabled: true
+      isDisabled: true,
+      currentEvent: {},
+      displayMode: 'принято'
     }
   },
   methods:{
@@ -162,6 +198,41 @@ export default {
             this.$root.currentEvent = data.data.objects[0].id;
         })
     },
+    changeSelectedOrganization(event){
+      console.log('Статус mode', event.target.options[event.target.options.selectedIndex].value)
+      this.displayMode = event.target.options[event.target.options.selectedIndex].value
+      this.loadPage()
+    },
+    loadPage(){
+      //запрашиваем заявки, кладем в userRequests
+      getUserRequests().then(data=>{
+        console.log(data)
+        this.usersRequests = []
+        console.log('Заявки ', data.data.objects)
+        data.data.objects.forEach(element => {
+          if(element.event_id == this.currentEvent.id){
+
+            this.usersRequests.push(element)
+
+            // getUserById(element.user_id).then(user=>{
+            //   console.log('пользователь, ', this.usersRequests[index])
+            //   console.log('пользователь, element ', element)
+            //   this.usersRequests[index].login = user.data.objects[0].login
+            //   console.log('логин ', this.usersRequests[index].login)
+            // }).catch(err=>{
+            //   console.log(err)
+            // })
+          }
+        });
+        // this.usersRequests.forEach(element => {
+        //     element.login = 'surin190899@gmail.com'
+        // });
+        console.log('Заявки на данное событие ',this.usersRequests)
+
+      }).catch(err=>{
+        console.log(err)
+      })
+    },
     acceptUserOnEvent(user, index){
       fetch(`/api/private-event-accept`, {
         credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
@@ -174,13 +245,12 @@ export default {
       })
       .then(response => {
         return response // возвращаем промис
-
       }).then(json=>{
         console.log('succsess ', json)
         console.log('Принято')
       })
 
-      this.users.splice(index, 1)
+      this.usersRequests.splice(index, 1)
       
     },
     declineUser(user, index){
@@ -200,13 +270,32 @@ export default {
         console.log('succsess deleted ', json)
         console.log('Принято')
       })
-      this.users.splice(index, 1)
+      this.usersRequests.splice(index, 1)
     },
     
 
   },
-  mounted(){
+  computed: {
+    filteredBids: function(){
+      var usersRequests = this.usersRequests;
+      var mode = this.displayMode
+      //фильтрация для отображения только тех событий, которые организации админа
+      usersRequests = usersRequests.filter(function(item){
+        console.log('mode: ', mode)
+        if (item.state_name == mode) {
+          return item;
+        }
+      })
 
+      return usersRequests;
+    },
+
+  },
+  mounted(){
+    getCurrentEvent().then(data=>{
+      this.currentEvent = data.data.objects[0]
+      this.loadPage()
+    })
   }
 }
 </script>

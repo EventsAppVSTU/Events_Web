@@ -17,13 +17,13 @@
           <tbody>
             <tr v-for="(chosenEvent, index) in chosenEvents" :key="index">
               <td>
-                {{chosenEvent.id}} 
+                {{index}} 
               </td>
               <td>
-                <input class="table-display-input table-event-name" type="text" v-model="chosenEvent.user_id" :disabled="isDisabled">
+                <input class="table-display-input table-event-name" type="text" v-model="chosenEvent.user_name" :disabled="isDisabled">
               </td>
               <td>
-                <input class="table-display-input table-event-name" type="text" v-model="chosenEvent.event_id" :disabled="isDisabled">
+                <input class="table-display-input table-event-name" type="text" v-model="chosenEvent.event_name" :disabled="isDisabled">
               </td>
               <td>
                 <div class="table-buttons-block">
@@ -38,6 +38,8 @@
 </template>
 
 <script>
+import {getChosenEvents} from '../requests/chosenEvents'
+import {getCurrentEvent} from '../requests/currentEvent'
 
 export default {
   name: 'ChosenEvents',
@@ -76,21 +78,28 @@ export default {
       }
   },
   methods:{
-      getChosenEvents(){
-        fetch('/api/get-organizations', {
-            headers:{
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Token': localStorage.hash
-            }
-        }).then(res=>{
-            var data = res.json()
-            return data
-        }).then(data=>{
-          console.log('this is data user: ', data.data.objects);
-          console.log(data.data.objects[0].id)
+      loadPage(){
+        getCurrentEvent().then(event=>{
+          getChosenEvents(event.data.objects[0].id).then(data=>{
+            console.log('выбранные события ', data.data.objects)
             this.chosenEvents = data.data.objects
+          })
         })
+        
+        // fetch('/api/get-organizations', {
+        //     headers:{
+        //         'Content-Type': 'application/json',
+        //         'Accept': 'application/json',
+        //         'Token': localStorage.hash
+        //     }
+        // }).then(res=>{
+        //     var data = res.json()
+        //     return data
+        // }).then(data=>{
+        //   console.log('this is data user: ', data.data.objects);
+        //   console.log(data.data.objects[0].id)
+        //     this.chosenEvents = data.data.objects
+        // })
       },
       editOrganization(index){
           console.log(index)
@@ -148,6 +157,7 @@ export default {
       }
   },
   mounted(){
+    this.loadPage()
       // this.getOrganizations()
   }
 }

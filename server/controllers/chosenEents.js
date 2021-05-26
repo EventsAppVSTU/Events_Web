@@ -6,7 +6,7 @@ import {getRequest, postRequest, putReguest, deleteRequest} from '../helpers/req
 function getChosenEvents(req, res){
     console.log('😅 getting organizations')
 
-    getRequest('http://yaem.store/robo/events/choosenEvents.php', req.headers.token).then(data=>{
+    getRequest(`http://yaem.store/robo/events/choosenEventsInfo.php?event_id=${req.query.event_id}`, req.headers.token).then(data=>{
         console.log('RESPONSE: ', data);    
         res.json(data);
     }).catch(err=>{

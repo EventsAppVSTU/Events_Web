@@ -9,8 +9,18 @@ function getPerformances(eventId){
     })
 }
 
+function postPerformance(data){
+    return sendRequest({
+        method: 'POST',
+        url: '/api/create-performance',
+        data: data,
+        token: localStorage.token
+    })
+}
+
 
 
 export {
-    getPerformances
+    getPerformances,
+    postPerformance
 }

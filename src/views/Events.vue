@@ -5,6 +5,10 @@
       <input type="text" placeholder="Search Event" v-model="searchString">
       <router-link to="/createEvent" class="btn btn-outline-danger btn-rounded">+ Create</router-link>
       </div>
+      <div v-if="filteredEvents == ''" class="message-empty-content">
+          <h5>Нет событий</h5>
+          <p>Добавьте события, нажав на кнопку "Созадать запись"</p>
+      </div>
 
     <div class="event-card" v-for="eventCard in filteredEvents" :key="eventCard.name">
       <hr class="event-card_hr">

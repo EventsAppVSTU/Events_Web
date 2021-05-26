@@ -55,31 +55,32 @@ export default {
   },
   data: function(){
       return {
-          chosenPerformances: [{
-              id: 1,
-              user_id: 'Иван Иванов',
-              performance_id: 'Открытие Робошколы'
-          },{
-              id: 2,
-              user_id: 'Петр Петров',
-              performance_id: 'Открытие Робошколы'
-          },
-          {
-              id: 3,
-              user_id: 'Петр Петров',
-              performance_id: 'Проблемы робототехники'
-          },{
-              id: 4,
-              user_id: 'Петр Петров',
-              performance_id: 'Искуственный интеллект'
-          },{
-              id: 5,
-              user_id: 'Андрей Сидоров',
-              performance_id: 'Основы Open CV'
-          }],
+          chosenPerformances: [
+          //   {
+          //     id: 1,
+          //     user_id: 'Иван Иванов',
+          //     performance_id: 'Открытие Робошколы'
+          // },{
+          //     id: 2,
+          //     user_id: 'Петр Петров',
+          //     performance_id: 'Открытие Робошколы'
+          // },
+          // {
+          //     id: 3,
+          //     user_id: 'Петр Петров',
+          //     performance_id: 'Проблемы робототехники'
+          // },{
+          //     id: 4,
+          //     user_id: 'Петр Петров',
+          //     performance_id: 'Искуственный интеллект'
+          // },{
+          //     id: 5,
+          //     user_id: 'Андрей Сидоров',
+          //     performance_id: 'Основы Open CV'
+          // }
+          ],
       isDisabled: '',
       eventId: Number,
-      // editBtn: 'Edit',
       org:{
               name: ''
         }
@@ -99,7 +100,6 @@ export default {
           }
           else{
             console.log('NOT editing')
-            // this.editBtn = 'Edit'
             this.isDisabled = ''
             //update function
           }

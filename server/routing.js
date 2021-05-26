@@ -14,7 +14,8 @@ import {signIn, auth} from './controllers/auth.js'
 
 import {getChosenPerformances} from './controllers/chosenPerformances.js'
 
-import {acceptUserOnEvent, declineUserRequest} from './controllers/privateEvent.js'
+import {acceptUserOnEvent, declineUserRequest, getBids} from './controllers/privateEvent.js'
+import { createBidsState, deleteBidsState, getBidsStates, updateBidsState } from './controllers/bidsStates.js';
 
 export default (app)=>{
     //___________routes__________
@@ -38,7 +39,7 @@ app.post('/api/create-new-event', urlencodedParser, createNewEvent)
 
 app.get('/api/event-news', urlencodedParser, getEventNews)
 app.post('/api/create-news', urlencodedParser, createNews)
-app.post('/api/delete-event-news', urlencodedParser, deleteEventNews)
+app.delete('/api/delete-event-news', urlencodedParser, deleteEventNews)
 
 //____________________Текущее событие______________________
 //_________________________________________________________
@@ -63,6 +64,7 @@ app.get('/api/get-performances-by-id', urlencodedParser, getPerformances)
 
 //новое
 app.post('/api/create-performance-by-id', urlencodedParser, createPerformance)
+app.post('/api/create-performance', urlencodedParser, createPerformance)
 
 app.post('/api/update-performance-by-id', urlencodedParser, updatePerformance)
 
@@ -91,7 +93,7 @@ app.delete('/api/delete-user', deleteUser);
 //______________Выбраные События____________________
 //___________________________________________________ 
 
-app.get('/api/get-сhosen-events', urlencodedParser, getChosenEvents);
+app.get('/api/get-chosen-events', urlencodedParser, getChosenEvents);
 
 //______________Выбраные Выступления____________________
 //___________________________________________________ 
@@ -132,9 +134,21 @@ app.get('/api/delete-category', urlencodedParser, deleteCategory);
 //____________SIGN IN_________________
 app.post('/api/sign-in', urlencodedParser, signIn)
 app.post('/api/auth', urlencodedParser, auth)
+
+
+//_____________________Приватные события________________
+//______________________________________________________
+app.get('/api/bids', urlencodedParser, getBids)
 app.post('/api/private-event-accept',urlencodedParser, acceptUserOnEvent)
 app.post('/api/private-event-decline',urlencodedParser, declineUserRequest)
 
+//__________________Статусы заявок______________________
+//______________________________________________________
+
+app.get('/api/bidsStates', urlencodedParser, getBidsStates)
+app.post('/api/bidsStates', urlencodedParser, createBidsState)
+app.put('/api/bidsStates', urlencodedParser, updateBidsState)
+app.delete('/api/bidsStates', urlencodedParser, deleteBidsState)
 
 }
 
