@@ -11,7 +11,7 @@
             <div class="data-row_number">{{index}}</div>
             <div class="data-row_content">
               <div class="data-row_content-top">
-                <input class="table-display-input table-event-name data-row_content-top_name" type="text" v-model="performance.name" :disabled="isDisabled!==index">
+                <input class="table-display-input table-event-name data-row_content-top_name" type="text" v-model="performance.performances_name" :disabled="isDisabled!==index">
                 
                 <div class="data-row_content-top_performance-date">
                   <svg class="feather data-row-icons" >
@@ -123,21 +123,21 @@ export default {
             image: "img/nasa-Q1p7bh3SHj8-unsplash.jpg" 
       },
       performances: [{ id: 1, 
-            name: "Открытие Робошколы",
+            performance_name: "Открытие Робошколы",
             date: "19-06-2020",
             time: "10:00",
             speaker: "Иван Иванов",
             }
             ,{id: 2, 
-            name: "Проблемы робототехники",
+            performance_name: "Проблемы робототехники",
             date: "19-06-2020",
             time: "11:00",
             speaker: "Иван Иванов"},{id: 3, 
-            name: "Искуственный интеллект",
+            performance_name: "Искуственный интеллект",
             date: "19-06-2020",
             time: "12:30",
             speaker: "Иван Иванов"},{id: 4, 
-            name: "Основы Open CV",
+            performance_name: "Основы Open CV",
             date: "19-06-2020",
             time: "14:00",
             speaker: "Иван Иванов"}],
@@ -152,7 +152,7 @@ export default {
 
 
       perf: {
-        name: '',
+        performance_name: '',
         datePerf: '',
         description: '',
         startTime: '',
@@ -228,7 +228,7 @@ export default {
     },
     createPerformance(){
       this.perf.event_id = this.currentEvent.id
-      if(this.perf.name){
+      if(this.perf.performance_name){
         
         fetch(`/api/create-performance-by-id`, {
         credentials: 'same-origin',  // параметр определяющий передвать ли разные сессионные данные вместе с запросом
@@ -273,7 +273,7 @@ export default {
         //взять данные
         var data ={
           id: '',
-          name: '',
+          performance_name: '',
           datePerf: '',
           description: '',
           startTime: '',
@@ -282,7 +282,7 @@ export default {
           event_id: ''
         }
           data.id = this.performances[index].id
-          data.name = this.performances[index].name
+          data.performance_name = this.performances[index].performance_name
           data.datePerf = this.performances[index].datePerf
           data.description = this.performances[index].description
           data.startTime = this.performances[index].startTime

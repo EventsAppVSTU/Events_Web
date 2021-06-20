@@ -1,10 +1,10 @@
 <template>
   <div class="chosenEvents">
-        <h2>Chosen Events</h2>
-        <form id="#per" class="performance-form">
+        <h2>Подписчики</h2>
+        <!-- <form id="#per" class="performance-form">
           <input type="text" class="performance-add" placeholder="name" name="name" v-model="org.name">
           <button class="btn btn-outline-danger btn-rounded" type="submit" v-on:click="createOrganization()">+ Create</button>
-        </form>
+        </form> -->
         <table class="table table-striped table-responsive-lg table-sm">
           <thead>
             <tr>

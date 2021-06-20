@@ -52,7 +52,10 @@
               <img src="img/map.png" alt="">
           </div> -->
           <!-- <input type="submit" value="Save"> -->
-          <button type="submit" class="btn btn-outline-danger btn-rounded" v-on:click="createEvent($event)">Create Event</button>
+          <div class="createEvent-buttons">
+            <router-link to="/events" class="btn btn-outline-secondary btn-rounded">Отменить</router-link>
+            <button type="submit" class="btn btn-outline-danger btn-rounded" v-on:click="createEvent($event)">Создать событие</button>
+          </div>
         <!-- </form> -->
     </div>
   </div>
@@ -107,6 +110,19 @@ export default {
 </script>
 
 <style>
+.createEvent-buttons{
+  width: 100%;
+  margin-bottom: 3rem;
+  background-color: rgb(248, 246, 246);
+  padding: 1rem;
+  display: flex;
+}
+.createEvent-buttons>button{
+ justify-content: center;
+}
+.createEvent-buttons>button:nth-child(even){
+  margin: 0 1rem;
+}
 .current-event_header>input{
     border: none;
     width: 100%;

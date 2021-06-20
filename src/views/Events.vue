@@ -1,9 +1,9 @@
 <template>
  <div>
-   <h2>Events</h2>
+   <h2>События</h2>
       <div class="events-toolbar">
-      <input type="text" placeholder="Search Event" v-model="searchString">
-      <router-link to="/createEvent" class="btn btn-outline-danger btn-rounded">+ Create</router-link>
+      <input type="text" placeholder="Найти событие..." v-model="searchString">
+      <router-link to="/createEvent" class="btn btn-outline-danger btn-rounded">+ Создать</router-link>
       </div>
       <div v-if="filteredEvents == ''" class="message-empty-content">
           <h5>Нет событий</h5>

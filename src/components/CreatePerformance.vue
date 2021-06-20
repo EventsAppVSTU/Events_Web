@@ -20,7 +20,7 @@
       <div class="modal-body">
         <form class="performance-form">
           <div class="performance-form_header">
-            <input type="text" class="performance-add" placeholder="Название" name="name"  v-model="perf.name">
+            <input type="text" class="performance-add" placeholder="Название" name="name"  v-model="perf.performance_name">
           </div>
           <div class="performance-form_info">
             <!-- <input type="text" class="performance-add" placeholder="Описание" name="description" v-model="perf.description"> -->
@@ -75,7 +75,7 @@ export default {
   data (){
     return {
       perf: {
-        name: '',
+        performance_name: '',
         datePerf: '',
         description: '',
         startTime: '',
@@ -89,10 +89,10 @@ export default {
   methods:{
     createPerformance(){
       this.perf.event_id = this.event_id;
-      if(this.perf.name){
+      if(this.perf.performance_name){
         postPerformance(this.perf).then(data=>{
           console.log(data)
-          this.perf.name = ''
+          this.perf.performance_name = ''
           this.perf.datePerf = ''
           this.perf.description = ''
           this.perf.startTime = ''

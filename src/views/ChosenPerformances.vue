@@ -1,11 +1,14 @@
 <template>
   <div class="chosenEvents">
-        <h2>Chosen Performances</h2>
-        <form id="#per" class="performance-form">
+        <h2>Выбранные секции</h2>
+        <!-- <form id="#per" class="performance-form">
           <input type="text" class="performance-add" placeholder="User name" name="name" v-model="org.name">
           <input type="text" class="performance-add" placeholder="Performance" name="name" v-model="org.name">
           <button class="btn btn-outline-danger btn-rounded" type="submit" v-on:click="createOrganization()">+ Create</button>
-        </form>
+        </form> -->
+        <!-- <div class="statistics">
+          <p>75 человек</p>
+        </div> -->
         <table class="table table-striped table-responsive-lg table-sm">
           <thead>
             <tr>
@@ -21,11 +24,11 @@
                 {{chosenPerformance.id}} 
               </td>
               <td>
-                <input class="table-display-input table-event-name" type="text" v-model="chosenPerformance.user_id" :disabled="isDisabled">
+                <input class="table-display-input table-event-name" type="text" v-model="chosenPerformance.user_name" :disabled="isDisabled">
               </td>
               <td>
                 <PerformancesComboBox :eventId="eventId" v-if="isDisabled===index"/>
-                <input class="table-display-input table-event-name" type="text" v-model="chosenPerformance.performance_id" :disabled="isDisabled">
+                <input class="table-display-input table-event-name" type="text" v-model="chosenPerformance.performances_name" :disabled="isDisabled">
               </td>
               <td>
                 <div class="table-buttons-block">
@@ -56,31 +59,20 @@ export default {
   data: function(){
       return {
           chosenPerformances: [
-          //   {
-          //     id: 1,
-          //     user_id: 'Иван Иванов',
-          //     performance_id: 'Открытие Робошколы'
-          // },{
-          //     id: 2,
-          //     user_id: 'Петр Петров',
-          //     performance_id: 'Открытие Робошколы'
-          // },
-          // {
-          //     id: 3,
-          //     user_id: 'Петр Петров',
-          //     performance_id: 'Проблемы робототехники'
-          // },{
-          //     id: 4,
-          //     user_id: 'Петр Петров',
-          //     performance_id: 'Искуственный интеллект'
-          // },{
-          //     id: 5,
-          //     user_id: 'Андрей Сидоров',
-          //     performance_id: 'Основы Open CV'
-          // }
+          // "id": "6",
+          //       "user_id": "1",
+          //       "performances_id": "5",
+          //       "user_name": "2021 3!!! МАРТ!!!",
+          //       "performances_name": "About Space",
+          //       "datePerf": "2020-05-22 00:00:00",
+          //       "startTime": "17:11:00",
+          //       "endTime": "20:11:00",
+          //       "speaker": "Иванов11",
+          //       "description": "Описание 1122"
+          
           ],
       isDisabled: '',
-      eventId: Number,
+      currentEvent: {},
       org:{
               name: ''
         }
@@ -88,8 +80,10 @@ export default {
   },
   methods:{
     loadPage(){
-      getChosenPerformances(this.eventId).then(data=>{
+      console.log('ВЫБРАННЫЕ СОБЫТИЯ')
+      getChosenPerformances(this.currentEvent.id).then(data=>{
         console.log('chosen performances ', data.data)
+        this.chosenPerformances = data.data.objects
       })
     },
     editChosenPerformance(index){
@@ -106,10 +100,21 @@ export default {
     }
   },
   mounted(){
-    getCurrentEvent().then(event=>{
-      this.eventId = parseInt(event.data.objects[0].id);
-      this.loadPage()
+    getCurrentEvent().then(eventData=>{
+        console.log('event data', eventData.data.objects)
+        this.currentEvent = eventData.data.objects[0]
+        console.log(eventData.data.objects[0].name)
+
+        this.loadPage()
+    }).catch(err=>{
+      console.log(err)
     })
   }
 }
 </script>
+
+<style scoped>
+.statistics{
+
+}
+</style>

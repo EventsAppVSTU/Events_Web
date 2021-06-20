@@ -12,7 +12,6 @@ function sendRequest(req){
             console.log('403 happend')
             reject(error)
         })
-
     })
 }
 

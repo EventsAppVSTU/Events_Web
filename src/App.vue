@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app bg-event-app">
     <header>
       
         <div class="header-row">
@@ -56,18 +56,10 @@
                                 События</router-link>
                               </span>
                             </li>
-                            <li class="nav-item">
-                              <a class="nav-link" href="#">
-                                 <router-link to="/chosenEvents">
-                                 <svg class="feather">
-                                    <use xlink:href="@/assets/feather-sprite.svg#book"/>
-                                </svg>
-                                 Выбранные события</router-link>
-                              </a>
-                            </li>
                             <li>
                               <hr>
                             </li>
+                            
                             <div v-if="currentEvent != undefined">
                               <li class="nav-item">
                                 <span class="nav-link currentEventMenu">
@@ -79,7 +71,6 @@
                                   </router-link>
                                 </span>
                               </li>
-                            
                               <li class="nav-item">
                                 <span class="nav-link">
                                 
@@ -100,6 +91,15 @@
                                   Расписание</router-link>
                                 </a>
                               </li>
+                              <li class="nav-item">
+                              <a class="nav-link" href="#">
+                                 <router-link to="/chosenEvents">
+                                 <svg class="feather">
+                                    <use xlink:href="@/assets/feather-sprite.svg#book"/>
+                                </svg>
+                                 Подписчики</router-link>
+                              </a>
+                            </li>
                               <li class="nav-item">
                                 <a class="nav-link" href="#">
                                   <router-link to="/chosenPerformances">
@@ -301,6 +301,16 @@ export default {
 </script>
 
 <style>
+/* body, html{
+  background: url('~@/assets/event-app-bg.png') center center no-repeat !important;
+  background-size: cover;
+  background-attachment: fixed;
+} */
+
+.form-select{
+  padding: .5rem;
+  margin-bottom: 1rem;
+}
 .loader-conteiner{
   position: absolute;
   background: #111111c5;
@@ -393,6 +403,7 @@ header{
   margin: auto;
   border-radius: 1.2rem;
   border: 1px solid rgb(218, 218, 218);
+  background-color: white;
 }
 
 .feedback{

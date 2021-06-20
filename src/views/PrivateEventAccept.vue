@@ -34,8 +34,8 @@
                 <span>хочет записаться на событие</span>
                 <!-- <p class="data-card-p">{{user.requestedEvent}}</p> -->
                 <p class="data-card-p">{{user.event_name}}</p>
-                <button  class="btn btn-outline-success mx-1" @click="acceptUserOnEvent(user, index)">Accept</button>
-                <button  class="btn btn-outline-danger" @click="declineUser(user, index)">Decline</button>
+                <button  class="btn btn-outline-success mx-1" @click="acceptUserOnEvent(user, index)">Принять</button>
+                <button  class="btn btn-outline-danger" @click="declineUser(user, index)">Отклонить</button>
               </div>            
           </div>
 

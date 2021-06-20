@@ -1,9 +1,9 @@
 <template>
  <div>
-   <h2>News</h2>
+   <h2>Новости</h2>
       <div class="events-toolbar">
-        <input type="text" placeholder="Search News" v-model="searchString">
-         <router-link to="/createNews" class="btn btn-outline-danger btn-rounded">+ Create</router-link>
+        <input type="text" placeholder="Найти новость..." v-model="searchString">
+         <router-link to="/createNews" class="btn btn-outline-danger btn-rounded">+ Создать</router-link>
       </div>
 
 <div v-if="filteredNews == ''" class="message-empty-content">

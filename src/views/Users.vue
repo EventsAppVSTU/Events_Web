@@ -28,8 +28,22 @@
                 
                 <input class="table-display-input table-event-name data-row_content-top_name d-block" type="text" v-model="user.surname" :disabled="isDisabled!==index">
 
+
                 <div class="info-block">
-                  <!-- data-row-icons -->
+                  <div class="form-check" v-if="!(isDisabled!==index)">
+                    <!-- <svg class="feather data-row-icons">
+                      <use xlink:href="@/assets/feather-sprite.svg#check-circle"/>
+                    </svg> -->
+                    
+                    <input class="form-check-input" type="checkbox" v-model="user.organization_verify" :disabled="isDisabled!==index" id="verify-organization">
+                    <label class="form-check-label" for="verify-organization">
+                      Подтвердить организацию
+                    </label>
+                  </div>
+                  <p class="text-primary" v-if="user.organization_verify == 1">Организация подтвержденна</p>
+                  <p class="text-danger" v-else>Организация НЕ подтвержденна</p>
+                </div>
+                <!-- <div class="info-block">
                   <svg class="feather" >
                     <use xlink:href="@/assets/feather-sprite.svg#aperture"/>
                   </svg>
@@ -37,12 +51,11 @@
                 </div>
 
                 <div class="info-block">
-                  <!-- data-row-icons -->
                   <svg class="feather" >
                     <use xlink:href="@/assets/feather-sprite.svg#aperture"/>
                   </svg>
                   <input class="table-display-input table-event-name data-row_content-top_info" type="text" v-model="user.organization_id" :disabled="isDisabled!==index">
-                </div>
+                </div> -->
 
                 <OrganizationsComboBox @organizationSelected="setOrganization" :currentOrganization="user.organization_id" :index="user.id" 
                 v-if="isDisabled===index"
@@ -60,12 +73,12 @@
                   <input class="table-display-input table-event-name data-row_content-top_info" type="text" v-model="user.login" :disabled="isDisabled!==index">
                 </div>
 
-                <div class="info-block">
+                <!-- <div class="info-block">
                   <svg class="feather" >
                     <use xlink:href="@/assets/feather-sprite.svg#key"/>
                   </svg>
                   <input class="table-display-input table-event-name data-row_content-top_info" type="text" v-model="user.password" :disabled="isDisabled!==index">
-                </div>
+                </div> -->
 
                 <div class="info-block">
                   <svg class="feather" >
@@ -81,12 +94,6 @@
                   <input class="table-display-input table-event-name data-row_content-top_info" type="text" v-model="user.web_link" :disabled="isDisabled!==index">
                 </div>
 
-                <div class="info-block">
-                  <svg class="feather data-row-icons" >
-                    <use xlink:href="@/assets/feather-sprite.svg#globe"/>
-                  </svg>
-                  <input class="table-display-input table-event-name data-row_content-top_info" type="text" v-model="user.organization_verify" :disabled="isDisabled!==index">
-                </div>
 
               </div>
               </div>
@@ -398,11 +405,13 @@ export default {
       var searchString = this.searchString;
 
       //фильтрация для отображения только тех событий, которые организации админа
-      // eventsArray = eventsArray.filter(function(item){
-      //   if (item.organization_id == localStorage.organizationId) {
-      //     return item;
-      //   }
-      // })
+      if(localStorage.userRole != 2){ 
+        usersArray = usersArray.filter(function(item){
+          if (item.organization_id == localStorage.organizationId) {
+            return item;
+          }
+        })
+      }
 
       if (!searchString) {
         return usersArray;
